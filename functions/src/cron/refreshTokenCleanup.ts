@@ -1,11 +1,8 @@
-import {
-  RefreshToken,
-  IRefreshAccessTokenDocument,
-} from '../auth/models/refreshAccessTokenModel';
+import { RefreshToken } from '../models/schemas/refreshAccessTokenSchema';
 
 export async function refreshTokenCleanup() {
   try {
-    const expiredTokens: IRefreshAccessTokenDocument[] =
+    const expiredTokens =
       await RefreshToken.find({ expiresAt: { $lt: new Date() } });
 
     await RefreshToken.deleteMany({ expiresAt: { $lt: new Date() } });
