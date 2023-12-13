@@ -3,18 +3,13 @@ import dotenv from 'dotenv';
 import express from 'express';
 import * as functions from 'firebase-functions';
 import { connect } from 'mongoose';
-// import cron from 'node-cron';
-dotenv.config();
-
-// import { refreshTokenCleanup } from './cron/refreshTokenCleanup';
 import { corsOptions } from './corsConfig';
 import loginRoute from './routes/loginRoute';
 import userRouter from './routes/userRoute';
 
+dotenv.config();
+
 const app = express();
-
-app.use(cors(corsOptions));
-
 const connectToDatabase = async () => {
   try {
     await connect(process.env.DB_URL!);
@@ -25,8 +20,9 @@ const connectToDatabase = async () => {
 };
 
 // connectToDatabase();
-app.use(express.json());
 
+app.use(cors(corsOptions));
+app.use(express.json());
 app.use('/user', userRouter);
 app.use('/', loginRoute);
 
