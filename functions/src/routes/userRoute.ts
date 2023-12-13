@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { createUser, getAllUsers, getUserById, updateUserById, deleteUserById } from '../controllers/userController';
 import { loggedInUserMiddleware } from '../middlewares/loggedInUserMiddleware';
 
-const router: Router = Router();
+const router = Router();
 
 router.post('/', createUser);
 router.get('/', getAllUsers);
