@@ -10,7 +10,7 @@ export const login = async (
 ): Promise<void | Response> => {
   try {
     const { username, password } = req.body;
-    
+
     const user = await User.findOneByQuery({ username });
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({
@@ -57,10 +57,13 @@ export const login = async (
         }
       );
 
-      refreshTokenEntry = await RefreshToken.updateById(refreshTokenEntry._id.toString(), {
-        token: newRefreshToken,
-        expiresAt: expiresAt,
-      });
+      refreshTokenEntry = await RefreshToken.updateById(
+        refreshTokenEntry._id.toString(),
+        {
+          token: newRefreshToken,
+          expiresAt: expiresAt,
+        }
+      );
     }
 
     const accessToken = jwt.sign(
