@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 import * as RefreshToken from '../models/refreshAccessTokenModel';
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET as string;
@@ -10,19 +10,28 @@ export const refreshAccessToken = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const { refreshToken } = req.body;
-    if (!refreshToken) {
-      return res
-        .status(401)
-        .json({ error: 'Unauthorized', message: 'Refresh token is missing.' });
+    const { userId } = req.body;
+
+    const refreshToken = await RefreshToken.findOneByQuery({
+      userId,
+    });
+    let decoded: JwtPayload;
+    try {
+      decoded = jwt.verify(
+        refreshToken.token,
+        refreshTokenSecret
+      ) as JwtPayload;
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        return res.status(401).json({ error: 'Token expired' });
+      } else {
+        return res
+          .status(500)
+          .json({ error: 'Failed to refresh token', message: error });
+      }
     }
 
-    const decoded = jwt.verify(refreshToken, refreshTokenSecret) as JwtPayload;
-    await RefreshToken.findOneByQuery({
-      userId: decoded.userId,
-    });
-
-    const accessToken = jwt.sign(
+    const newAccessToken = jwt.sign(
       {
         userId: decoded.userId,
         username: decoded.username,
@@ -31,7 +40,7 @@ export const refreshAccessToken = async (
       accessTokenSecret,
       { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRATION}` }
     );
-    return res.status(201).json({ accessToken });
+    return res.status(201).json({ accessToken: newAccessToken });
   } catch (error) {
     if (error instanceof Error) {
       return res
