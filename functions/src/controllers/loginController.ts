@@ -57,7 +57,7 @@ export const login = async (
         }
       );
 
-      await RefreshToken.updateById(refreshTokenEntry._id.toString(), {
+      refreshTokenEntry = await RefreshToken.updateById(refreshTokenEntry._id.toString(), {
         token: newRefreshToken,
         expiresAt: expiresAt,
       });
