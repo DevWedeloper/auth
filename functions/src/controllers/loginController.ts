@@ -11,7 +11,7 @@ export const login = async (
   try {
     const { username, password } = req.body;
 
-    const user = await User.findOneByQuery({ username });
+    const user = await User.findOneByUsernameOrId({ username });
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({
         error: 'Authentication error',

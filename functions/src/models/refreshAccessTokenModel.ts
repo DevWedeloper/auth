@@ -2,6 +2,7 @@ import {
   IRefreshAccessToken,
   IRefreshAccessTokenWithoutId,
 } from '../types/refreshAccessTokenType';
+import { RefreshTokenUniqueIdentifier } from '../types/uniqueIdentifier';
 import { RefreshToken } from './schemas/refreshAccessTokenSchema';
 
 export const create = async (
@@ -10,8 +11,8 @@ export const create = async (
   return (await RefreshToken.create(token)).toObject();
 };
 
-export const findOneByQuery = async (
-  query: Partial<IRefreshAccessToken>
+export const findOneByUsernameOrUserIdOrId = async (
+  query: Partial<RefreshTokenUniqueIdentifier>
 ): Promise<IRefreshAccessToken> => {
   return (
     (await RefreshToken.findOne(query)) ||

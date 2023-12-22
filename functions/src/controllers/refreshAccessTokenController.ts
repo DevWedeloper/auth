@@ -12,7 +12,7 @@ export const refreshAccessToken = async (
   try {
     const { userId } = req.body;
 
-    const refreshToken = await RefreshToken.findOneByQuery({
+    const refreshToken = await RefreshToken.findOneByUsernameOrUserIdOrId({
       userId,
     });
     let decoded: JwtPayload;
