@@ -4,7 +4,7 @@ import express from 'express';
 import * as functions from 'firebase-functions';
 import { connect } from 'mongoose';
 import { corsOptions } from './corsConfig';
-import loginRoute from './routes/loginRoute';
+import authActionsRoute from './routes/authActionsRoute';
 import userRouter from './routes/userRoute';
 
 dotenv.config();
@@ -24,7 +24,7 @@ const connectToDatabase = async () => {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/user', userRouter);
-app.use('/', loginRoute);
+app.use('/', authActionsRoute);
 
 // app.listen(process.env.MY_PORT, () => {
 //   console.log(`Server is running on PORT ${process.env.MY_PORT}`);
