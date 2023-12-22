@@ -20,6 +20,15 @@ export const findOneByUsernameOrUserIdOrId = async (
   );
 };
 
+export const deleteOneByUsernameOrUserIdOrId = async (
+  query: Partial<RefreshTokenUniqueIdentifier>
+): Promise<{
+  acknowledged: boolean;
+  deletedCount: number;
+}> => {
+  return await RefreshToken.deleteOne(query);
+};
+
 export const isUnique = async ({
   userId,
 }: {
