@@ -10,12 +10,16 @@ export const login = async (
 ): Promise<void | Response> => {
   try {
     const { username, password } = req.body;
-    
-    const user = await User.findOneByQuery({ username });
-    if (!user || !bcrypt.compareSync(password, user.password)) {
+
+    const user = await User.isExisting({ username });
+    if (!user) {
       return res.status(401).json({
-        error: 'Authentication error',
-        message: 'Invalid credentials',
+        error: 'Invalid username',
+      });
+    }
+    if (!bcrypt.compareSync(password, user.password)) {
+      return res.status(401).json({
+        error: 'Invalid password',
       });
     }
 
@@ -57,10 +61,13 @@ export const login = async (
         }
       );
 
-      await RefreshToken.updateById(refreshTokenEntry._id.toString(), {
-        token: newRefreshToken,
-        expiresAt: expiresAt,
-      });
+      refreshTokenEntry = await RefreshToken.updateById(
+        refreshTokenEntry._id.toString(),
+        {
+          token: newRefreshToken,
+          expiresAt: expiresAt,
+        }
+      );
     }
 
     const accessToken = jwt.sign(
@@ -71,7 +78,6 @@ export const login = async (
     return res.status(201).json({
       userId: user._id,
       accessToken,
-      refreshToken: refreshTokenEntry.token,
     });
   } catch (error) {
     if (error instanceof Error) {

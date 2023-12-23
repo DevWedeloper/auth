@@ -82,7 +82,7 @@ export const updateUserById = async (
       updatedData.username &&
       updatedData.username !== userToUpdate.username
     ) {
-      const existingUser = await User.findOneByQuery({
+      const existingUser = await User.findOneByUsernameOrId({
         username: updatedData.username,
       });
       if (existingUser) {

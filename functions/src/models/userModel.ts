@@ -1,3 +1,4 @@
+import { UserUniqueIdentifier } from '../types/uniqueIdentifier';
 import { IUser, IUserWithoutId } from '../types/userType';
 import { User } from './schemas/userSchema';
 
@@ -9,8 +10,8 @@ export const getAll = async (): Promise<IUser[]> => {
   return await User.find();
 };
 
-export const findOneByQuery = async (
-  query: Partial<IUser>
+export const findOneByUsernameOrId = async (
+  query: Partial<UserUniqueIdentifier>
 ): Promise<IUser> => {
   return (
     (await User.findOne(query)) ||
@@ -20,6 +21,12 @@ export const findOneByQuery = async (
 
 export const findById = async (id: string): Promise<IUser> => {
   return (await User.findById(id)) || throwUserNotFoundError();
+};
+
+export const isExisting = async (
+  query: Partial<UserUniqueIdentifier>
+): Promise<IUser | null> => {
+  return await User.findOne(query);
 };
 
 export const updateById = async (
