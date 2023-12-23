@@ -11,11 +11,15 @@ export const login = async (
   try {
     const { username, password } = req.body;
 
-    const user = await User.findOneByUsernameOrId({ username });
-    if (!user || !bcrypt.compareSync(password, user.password)) {
+    const user = await User.isExisting({ username });
+    if (!user) {
       return res.status(401).json({
-        error: 'Authentication error',
-        message: 'Invalid credentials',
+        error: 'Invalid username',
+      });
+    }
+    if (!bcrypt.compareSync(password, user.password)) {
+      return res.status(401).json({
+        error: 'Invalid password',
       });
     }
 
