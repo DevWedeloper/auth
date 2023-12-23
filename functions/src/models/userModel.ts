@@ -23,6 +23,12 @@ export const findById = async (id: string): Promise<IUser> => {
   return (await User.findById(id)) || throwUserNotFoundError();
 };
 
+export const isExisting = async (
+  query: Partial<UserUniqueIdentifier>
+): Promise<IUser | null> => {
+  return await User.findOne(query);
+};
+
 export const updateById = async (
   id: string,
   query: Partial<IUserWithoutId>
