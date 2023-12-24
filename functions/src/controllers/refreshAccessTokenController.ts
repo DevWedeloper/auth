@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 import * as RefreshToken from '../models/refreshAccessTokenModel';
 
@@ -7,7 +7,8 @@ const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET as string;
 
 export const refreshAccessToken = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { userId } = req.body;
@@ -42,10 +43,6 @@ export const refreshAccessToken = async (
     );
     return res.status(201).json({ accessToken: newAccessToken });
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({ error: 'Failed to refresh token', message: error.message });
-    }
+    next(error);
   }
 };

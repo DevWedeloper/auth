@@ -3,10 +3,10 @@ import dotenv from 'dotenv';
 import express from 'express';
 import * as functions from 'firebase-functions';
 import { connect } from 'mongoose';
+import { errorHandler } from './controllers/errorHandlerController';
 import { corsOptions } from './corsConfig';
 import authActionsRoute from './routes/authActionsRoute';
 import userRouter from './routes/userRoute';
-
 dotenv.config();
 
 const app = express();
@@ -25,6 +25,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/user', userRouter);
 app.use('/', authActionsRoute);
+app.use(errorHandler);
 
 // app.listen(process.env.MY_PORT, () => {
 //   console.log(`Server is running on PORT ${process.env.MY_PORT}`);

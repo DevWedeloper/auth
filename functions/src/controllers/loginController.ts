@@ -1,17 +1,18 @@
 import bcrypt from 'bcrypt';
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import * as RefreshToken from '../models/refreshAccessTokenModel';
 import * as User from '../models/userModel';
 
 export const login = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { username, password } = req.body;
 
-    const user = await User.isExisting({ username });
+    const user = await User.findOneByUsernameOrId({ username });
     if (!user) {
       return res.status(401).json({
         error: 'Invalid username',
@@ -80,10 +81,6 @@ export const login = async (
       accessToken,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({ error: 'Failed to login', message: error.message });
-    }
+    next(error);
   }
 };
