@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import * as functions from 'firebase-functions';
 import { connect } from 'mongoose';
-import { errorHandler } from './controllers/errorHandlerController';
+import { errorHandler } from './middlewares/errorHandlerMiddleware';
 import { corsOptions } from './corsConfig';
 import authActionsRoute from './routes/authActionsRoute';
 import userRouter from './routes/userRoute';
