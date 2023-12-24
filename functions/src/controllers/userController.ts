@@ -28,7 +28,7 @@ export const createUser = async (
 };
 
 export const getAllUsers = async (
-  req: Request,
+  _: Request,
   res: Response,
   next: NextFunction
 ): Promise<void | Response> => {
