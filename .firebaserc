@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "auth-1a208"
-  }
+    "default": "auth-1a208",
+    "prod": "auth-1a208"
+  },
+  "targets": {},
+  "etags": {}
 }

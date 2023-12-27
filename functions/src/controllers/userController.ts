@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import * as User from '../models/userModel';
 
 interface AuthRequest extends Request {
@@ -9,7 +9,8 @@ interface AuthRequest extends Request {
 
 export const createUser = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { username, password, role } = req.body;
@@ -22,37 +23,40 @@ export const createUser = async (
     });
     return res.status(201).json(user);
   } catch (error) {
-    return res.status(500).json({ error });
+    next(error);
   }
 };
 
 export const getAllUsers = async (
-  req: Request,
-  res: Response
+  _: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const users = await User.getAll();
     return res.status(200).json(users);
   } catch (error) {
-    return res.status(500).json({ error });
+    next(error);
   }
 };
 
 export const getUserById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const user = await User.findById(req.params.id);
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(500).json({ error });
+    next(error);
   }
 };
 
 export const updateUserById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const authReq = req as AuthRequest;
@@ -93,13 +97,14 @@ export const updateUserById = async (
     const user = await User.updateById(id, updatedData);
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(500).json({ error });
+    next(error);
   }
 };
 
 export const deleteUserById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const authReq = req as AuthRequest;
@@ -119,6 +124,6 @@ export const deleteUserById = async (
       .status(200)
       .json({ message: 'User deleted successfully', user: deletedUser });
   } catch (error) {
-    return res.status(500).json({ error });
+    next(error);
   }
 };
