@@ -19,16 +19,17 @@ const connectToDatabase = async () => {
   }
 };
 
-// connectToDatabase();
-
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/user', userRouter);
 app.use('/', authActionsRoute);
 app.use(errorHandler);
 
-// app.listen(process.env.MY_PORT, () => {
-//   console.log(`Server is running on PORT ${process.env.MY_PORT}`);
-// });
+if (process.env.NODE_ENV === 'dev') {
+  connectToDatabase();
+  app.listen(process.env.MY_PORT, () => {
+    console.log(`Server is running on PORT ${process.env.MY_PORT}`);
+  });
+}
 
 export const api = functions.https.onRequest((connectToDatabase(), app));
