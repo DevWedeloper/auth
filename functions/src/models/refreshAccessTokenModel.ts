@@ -26,7 +26,7 @@ export const deleteOneByToken = async (
   acknowledged: boolean;
   deletedCount: number;
 }> => {
-  return await RefreshToken.deleteOne(query);
+  return await RefreshToken.deleteOne({ query });
 };
 
 export const isUnique = async ({
