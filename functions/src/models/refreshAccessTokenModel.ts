@@ -11,7 +11,7 @@ export const create = async (
   return (await RefreshToken.create(token)).toObject();
 };
 
-export const findOneByUsernameOrUserIdOrId = async (
+export const findOneByToken = async (
   query: Partial<RefreshTokenUniqueIdentifier>
 ): Promise<IRefreshAccessToken> => {
   return (
@@ -20,7 +20,7 @@ export const findOneByUsernameOrUserIdOrId = async (
   );
 };
 
-export const deleteOneByUsernameOrUserIdOrId = async (
+export const deleteOneByToken = async (
   query: Partial<RefreshTokenUniqueIdentifier>
 ): Promise<{
   acknowledged: boolean;
@@ -35,6 +35,12 @@ export const isUnique = async ({
   userId: string;
 }): Promise<IRefreshAccessToken | null> => {
   return await RefreshToken.findOne({ userId });
+};
+
+export const isExisting = async (
+  token: Partial<RefreshTokenUniqueIdentifier>
+): Promise<IRefreshAccessToken | null> => {
+  return await RefreshToken.findOne({ token });
 };
 
 export const updateById = async (

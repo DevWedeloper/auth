@@ -4,7 +4,7 @@ import { IRefreshAccessTokenWithoutId } from '../../types/refreshAccessTokenType
 const RefreshTokenSchema: Schema<IRefreshAccessTokenWithoutId> = new Schema({
   userId: { type: String, unique: true, required: true },
   username: { type: String, unique: true, required: true },
-  token: { type: String, required: true },
+  token: { type: String, unique: true, required: true },
   expiresAt: { type: Date, required: true },
 });
 

@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 import * as RefreshToken from '../models/refreshAccessTokenModel';
+import { generateAccessToken } from '../utils/tokenGenerator';
 
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET as string;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET as string;
 
 export const refreshAccessToken = async (
@@ -11,15 +11,26 @@ export const refreshAccessToken = async (
   next: NextFunction
 ): Promise<void | Response> => {
   try {
-    const { userId } = req.body;
+    const { refreshToken } = req.body;
 
-    const refreshToken = await RefreshToken.findOneByUsernameOrUserIdOrId({
-      userId,
-    });
+    if (!refreshToken) {
+      return res
+        .status(401)
+        .json({ error: 'Unauthorized', message: 'Refresh token is missing.' });
+    }
+
+    const currentRefreshToken = await RefreshToken.isExisting(refreshToken);
+    if (!currentRefreshToken) {
+      return res.status(403).json({
+        error: 'Unauthorized',
+        message: 'Refresh token not in database.',
+      });
+    }
+
     let decoded: JwtPayload;
     try {
       decoded = jwt.verify(
-        refreshToken.token,
+        currentRefreshToken.token,
         refreshTokenSecret
       ) as JwtPayload;
     } catch (error) {
@@ -32,16 +43,12 @@ export const refreshAccessToken = async (
       }
     }
 
-    const newAccessToken = jwt.sign(
-      {
-        userId: decoded.userId,
-        username: decoded.username,
-        role: decoded.role,
-      },
-      accessTokenSecret,
-      { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRATION}` }
-    );
-    return res.status(201).json({ accessToken: newAccessToken });
+    const accessToken = generateAccessToken({
+      userId: decoded.userId,
+      username: decoded.username,
+      role: decoded.role,
+    });
+    return res.status(201).json({ accessToken });
   } catch (error) {
     next(error);
   }

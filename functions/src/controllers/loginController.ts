@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import * as RefreshToken from '../models/refreshAccessTokenModel';
 import * as User from '../models/userModel';
+import { generateAccessToken, generateRefreshToken } from '../utils/tokenGenerator';
 
 export const login = async (
   req: Request,
@@ -24,7 +25,6 @@ export const login = async (
       });
     }
 
-    const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET as string;
     const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET as string;
     const expiresInDays = process.env.REFRESH_TOKEN_EXPIRATION!;
     const expiresAt = new Date(
@@ -35,13 +35,11 @@ export const login = async (
       userId: user._id.toString(),
     });
     if (!refreshTokenEntry) {
-      const refreshToken = jwt.sign(
-        { userId: user._id, username: user.username, role: user.role },
-        refreshTokenSecret,
-        {
-          expiresIn: `${expiresInDays}`,
-        }
-      );
+      const refreshToken = generateRefreshToken({
+        userId: user._id,
+        username: user.username,
+        role: user.role,
+      });
 
       refreshTokenEntry = await RefreshToken.create({
         userId: user._id.toString(),
@@ -71,14 +69,15 @@ export const login = async (
       );
     }
 
-    const accessToken = jwt.sign(
-      { userId: user._id, username: user.username, role: user.role },
-      accessTokenSecret,
-      { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRATION}` }
-    );
+    const accessToken = generateAccessToken({
+      userId: user._id,
+      username: user.username,
+      role: user.role,
+    });
     return res.status(201).json({
       userId: user._id,
       accessToken,
+      refreshToken: refreshTokenEntry.token,
     });
   } catch (error) {
     next(error);
