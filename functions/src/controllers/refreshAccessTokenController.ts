@@ -14,15 +14,25 @@ export const refreshAccessToken = async (
     const { refreshToken } = req.body;
 
     if (!refreshToken) {
-      return res.status(401).json({ error: 'Unauthorized', message: 'Refresh token is missing.' });
+      return res
+        .status(401)
+        .json({ error: 'Unauthorized', message: 'Refresh token is missing.' });
     }
 
-    RefreshToken.findOneByToken(refreshToken);
+    const currentRefreshToken = await RefreshToken.isExisting(refreshToken);
+    if (!currentRefreshToken) {
+      return res
+        .status(403)
+        .json({
+          error: 'Unauthorized',
+          message: 'Refresh token not in database.',
+        });
+    }
 
     let decoded: JwtPayload;
     try {
       decoded = jwt.verify(
-        refreshToken.token,
+        currentRefreshToken.token,
         refreshTokenSecret
       ) as JwtPayload;
     } catch (error) {

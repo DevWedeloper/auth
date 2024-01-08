@@ -37,6 +37,12 @@ export const isUnique = async ({
   return await RefreshToken.findOne({ userId });
 };
 
+export const isExisting = async (
+  token: Partial<RefreshTokenUniqueIdentifier>
+): Promise<IRefreshAccessToken | null> => {
+  return await RefreshToken.findOne({ token });
+};
+
 export const updateById = async (
   id: string,
   query: Partial<IRefreshAccessTokenWithoutId>
