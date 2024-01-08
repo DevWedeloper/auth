@@ -7,11 +7,9 @@ export const logout = async (
   next: NextFunction
 ): Promise<void | Response> => {
   try {
-    const { userId } = req.body;
+    const { refreshToken } = req.body;
 
-    await RefreshToken.deleteOneByUsernameOrUserIdOrId({
-      userId,
-    });
+    await RefreshToken.deleteOneByToken(refreshToken);
     return res.status(200).json({ message: 'Logged out successfully.' });
   } catch (error) {
     next(error);

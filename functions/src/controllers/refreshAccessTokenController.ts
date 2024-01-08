@@ -11,11 +11,14 @@ export const refreshAccessToken = async (
   next: NextFunction
 ): Promise<void | Response> => {
   try {
-    const { userId } = req.body;
+    const { refreshToken } = req.body;
 
-    const refreshToken = await RefreshToken.findOneByUsernameOrUserIdOrId({
-      userId,
-    });
+    if (!refreshToken) {
+      return res.status(401).json({ error: 'Unauthorized', message: 'Refresh token is missing.' });
+    }
+
+    RefreshToken.findOneByToken(refreshToken);
+
     let decoded: JwtPayload;
     try {
       decoded = jwt.verify(

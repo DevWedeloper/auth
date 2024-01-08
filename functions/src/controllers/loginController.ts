@@ -79,6 +79,7 @@ export const login = async (
     return res.status(201).json({
       userId: user._id,
       accessToken,
+      refreshToken: refreshTokenEntry.token
     });
   } catch (error) {
     next(error);
