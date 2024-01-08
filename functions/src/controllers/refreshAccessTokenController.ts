@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 import * as RefreshToken from '../models/refreshAccessTokenModel';
+import { generateAccessToken } from '../utils/tokenGenerator';
 
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET as string;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET as string;
 
 export const refreshAccessToken = async (
@@ -21,12 +21,10 @@ export const refreshAccessToken = async (
 
     const currentRefreshToken = await RefreshToken.isExisting(refreshToken);
     if (!currentRefreshToken) {
-      return res
-        .status(403)
-        .json({
-          error: 'Unauthorized',
-          message: 'Refresh token not in database.',
-        });
+      return res.status(403).json({
+        error: 'Unauthorized',
+        message: 'Refresh token not in database.',
+      });
     }
 
     let decoded: JwtPayload;
@@ -45,16 +43,12 @@ export const refreshAccessToken = async (
       }
     }
 
-    const newAccessToken = jwt.sign(
-      {
-        userId: decoded.userId,
-        username: decoded.username,
-        role: decoded.role,
-      },
-      accessTokenSecret,
-      { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRATION}` }
-    );
-    return res.status(201).json({ accessToken: newAccessToken });
+    const accessToken = generateAccessToken({
+      userId: decoded.userId,
+      username: decoded.username,
+      role: decoded.role,
+    });
+    return res.status(201).json({ accessToken });
   } catch (error) {
     next(error);
   }
