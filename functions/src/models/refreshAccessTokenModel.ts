@@ -21,12 +21,12 @@ export const findOneByToken = async (
 };
 
 export const deleteOneByToken = async (
-  query: Partial<RefreshTokenUniqueIdentifier>
+  token: Partial<RefreshTokenUniqueIdentifier>
 ): Promise<{
   acknowledged: boolean;
   deletedCount: number;
 }> => {
-  return await RefreshToken.deleteOne({ query });
+  return await RefreshToken.deleteOne({ token });
 };
 
 export const isUnique = async ({
