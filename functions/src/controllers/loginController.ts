@@ -75,8 +75,16 @@ export const login = async (
       role: user.role,
     });
 
-    res.cookie('accessToken', accessToken, { httpOnly: true });
-    res.cookie('refreshToken', refreshTokenEntry.token, { httpOnly: true });
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
+    res.cookie('refreshToken', refreshTokenEntry.token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
     return res.status(201).send();
   } catch (error) {
     next(error);

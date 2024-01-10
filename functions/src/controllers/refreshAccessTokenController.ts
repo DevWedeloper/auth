@@ -49,7 +49,11 @@ export const refreshAccessToken = async (
       username: decoded.username,
       role: decoded.role,
     });
-    res.cookie('accessToken', accessToken, { httpOnly: true });
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
     return res.status(201).send();
   } catch (error) {
     next(error);
