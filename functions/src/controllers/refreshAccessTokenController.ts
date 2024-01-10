@@ -11,12 +11,13 @@ export const refreshAccessToken = async (
   next: NextFunction
 ): Promise<void | Response> => {
   try {
-    const { refreshToken } = req.body;
+    const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
-      return res
-        .status(401)
-        .json({ error: 'Unauthorized', message: 'Refresh token is missing.' });
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'Refresh token is missing.',
+      });
     }
 
     const currentRefreshToken = await RefreshToken.isExisting(refreshToken);
@@ -48,7 +49,8 @@ export const refreshAccessToken = async (
       username: decoded.username,
       role: decoded.role,
     });
-    return res.status(201).json({ accessToken });
+    res.cookie('accessToken', accessToken, { httpOnly: true });
+    return res.status(201).send();
   } catch (error) {
     next(error);
   }
