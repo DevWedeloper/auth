@@ -7,10 +7,12 @@ export const logout = async (
   next: NextFunction
 ): Promise<void | Response> => {
   try {
-    const { refreshToken } = req.body;
-
+    const refreshToken = req.cookies.refreshToken;
+    
     await RefreshToken.deleteOneByToken(refreshToken);
-    return res.status(200).json({ message: 'Logged out successfully.' });
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    return res.status(204).send();
   } catch (error) {
     next(error);
   }

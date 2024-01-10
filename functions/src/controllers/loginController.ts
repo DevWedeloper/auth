@@ -74,11 +74,10 @@ export const login = async (
       username: user.username,
       role: user.role,
     });
-    return res.status(201).json({
-      userId: user._id,
-      accessToken,
-      refreshToken: refreshTokenEntry.token,
-    });
+
+    res.cookie('accessToken', accessToken, { httpOnly: true });
+    res.cookie('refreshToken', refreshTokenEntry.token, { httpOnly: true });
+    return res.status(201).send();
   } catch (error) {
     next(error);
   }

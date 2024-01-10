@@ -1,10 +1,11 @@
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import * as functions from 'firebase-functions';
 import { connect } from 'mongoose';
-import { errorHandler } from './middlewares/errorHandlerMiddleware';
 import { corsOptions } from './corsConfig';
+import { errorHandler } from './middlewares/errorHandlerMiddleware';
 import authActionsRoute from './routes/authActionsRoute';
 import userRouter from './routes/userRoute';
 dotenv.config();
@@ -20,6 +21,7 @@ const connectToDatabase = async () => {
 };
 
 app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(express.json());
 app.use('/user', userRouter);
 app.use('/', authActionsRoute);
