@@ -2,6 +2,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
+import mongoSanitize from 'express-mongo-sanitize';
 import * as functions from 'firebase-functions';
 import { connect } from 'mongoose';
 import { corsOptions } from './corsConfig';
@@ -23,6 +24,7 @@ const connectToDatabase = async () => {
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
+app.use(mongoSanitize());
 app.use('/user', userRouter);
 app.use('/', authActionsRoute);
 app.use(errorHandler);
