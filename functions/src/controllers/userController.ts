@@ -2,11 +2,6 @@ import bcrypt from 'bcrypt';
 import { Request, Response, NextFunction } from 'express';
 import * as User from '../models/userModel';
 
-interface AuthRequest extends Request {
-  authUserId: string;
-  authRole: 'admin' | 'standard';
-}
-
 export const createUser = async (
   req: Request,
   res: Response,
@@ -59,19 +54,17 @@ export const updateUserById = async (
   next: NextFunction
 ): Promise<void | Response> => {
   try {
-    const authReq = req as AuthRequest;
-    const { authUserId, authRole } = authReq;
     const { id } = req.params;
-    const { updatedData } = req.body;
+    const { updatedData, userId, role } = req.body;
 
     const userToUpdate = await User.findById(id);
     const isOwnerOrAdmin =
-      userToUpdate._id === authUserId || authRole === 'admin';
+      userToUpdate._id === userId || role === 'admin';
     if (!isOwnerOrAdmin) {
       return res.status(403).json({ error: 'Permission denied' });
     }
 
-    if (authRole === 'standard' && updatedData.username) {
+    if (role === 'standard' && updatedData.username) {
       return res.status(403).json({
         error: 'Standard users are not allowed to change their username',
       });
@@ -82,7 +75,7 @@ export const updateUserById = async (
     }
 
     if (
-      authRole === 'admin' &&
+      role === 'admin' &&
       updatedData.username &&
       updatedData.username !== userToUpdate.username
     ) {
@@ -107,12 +100,11 @@ export const deleteUserById = async (
   next: NextFunction
 ): Promise<void | Response> => {
   try {
-    const authReq = req as AuthRequest;
-    const { authUserId, authRole } = authReq;
+    const { userId, role } = req.body;
 
     const userToDelete = await User.findById(req.params.id);
     const isOwnerOrAdmin =
-      userToDelete._id === authUserId || authRole === 'admin';
+      userToDelete._id === userId || role === 'admin';
     if (!isOwnerOrAdmin) {
       return res.status(403).json({
         error: 'Standard users are only allowed to delete their own account',
