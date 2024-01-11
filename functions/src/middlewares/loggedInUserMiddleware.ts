@@ -13,7 +13,7 @@ export const loggedInUserMiddleware = async (
 ): Promise<void | Response> => {
   try {
     const authReq = req as AuthRequest;
-    const token = req.header('Authorization')?.split(' ')[1];
+    const token = req.cookies.accessToken;
     if (!token) {
       return res.status(401).json({ error: 'Authentication required' });
     }
