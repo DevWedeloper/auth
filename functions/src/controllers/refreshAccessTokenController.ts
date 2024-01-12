@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
-import * as RefreshToken from '../models/refreshAccessTokenModel';
-import { generateAccessToken } from '../utils/tokenGenerator';
+import * as User from '../models/userModel';
+import { generateAccessToken, generateRefreshToken } from '../utils/tokenGenerator';
 
-const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET as string;
+export const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET as string;
 
 export const refreshAccessToken = async (
   req: Request,
@@ -20,27 +20,60 @@ export const refreshAccessToken = async (
       });
     }
 
-    const currentRefreshToken = await RefreshToken.isExisting(refreshToken);
-    if (!currentRefreshToken) {
-      return res.status(403).json({
-        error: 'Unauthorized',
-        message: 'Refresh token not in database.',
-      });
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
+
+    const user = await User.findByToken({ refreshToken });
+    if (!user) {
+      try {
+        const decoded = jwt.verify(
+          refreshToken,
+          refreshTokenSecret
+        ) as JwtPayload;
+        console.log('breach detected!');
+        
+        const hackedUser = await User.findOneByUsernameOrId({
+          username: decoded.username,
+        });
+        await User.updateById(hackedUser._id, {
+          refreshToken: [],
+        });
+      } catch (error) {
+        if (error instanceof TokenExpiredError) {
+          return res.status(403).json({ error: 'Token expired' });
+        } else {
+          return res.status(403).json({ error: 'Invalid token' });
+        }
+      }
+      return res.status(403).json({ error: 'Breach Detected' });
     }
 
-    let decoded: JwtPayload;
+    const newRefreshTokenArray = user.refreshToken.filter(
+      (rt) => rt !== refreshToken
+    );
+
+    let decoded;
     try {
       decoded = jwt.verify(
-        currentRefreshToken.token,
+        refreshToken,
         refreshTokenSecret
       ) as JwtPayload;
     } catch (error) {
+      await User.updateById(user._id, {
+        refreshToken: [...newRefreshTokenArray],
+      });
       if (error instanceof TokenExpiredError) {
-        return res.status(401).json({ error: 'Token expired' });
+        return res.status(403).json({ error: 'Token expired' });
       } else {
-        return res
-          .status(500)
-          .json({ error: 'Failed to refresh token', message: error });
+        return res.status(403).json({ error: 'Invalid token' });
       }
     }
 
@@ -49,7 +82,25 @@ export const refreshAccessToken = async (
       username: decoded.username,
       role: decoded.role,
     });
+
+    const newRefreshToken = generateRefreshToken({
+      userId: decoded.userId,
+      username: decoded.username,
+      role: decoded.role,
+    });
+
+    const updatedUser = await User.updateById(user._id, {
+      refreshToken: [...newRefreshTokenArray, newRefreshToken]
+    });
+    console.log(updatedUser);
+    
+
     res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
+    res.cookie('refreshToken', newRefreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'none',

@@ -23,6 +23,7 @@ const userSchema: Schema<IUserWithoutId> = new Schema({
     index: true,
   },
   role: { type: String, enum: ['admin', 'standard'], default: 'standard' },
+  refreshToken: { type: [String], index: true },
 });
 
 export const User = model<IUserWithoutId>('User', userSchema);
