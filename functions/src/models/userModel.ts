@@ -2,7 +2,9 @@ import { UserUniqueIdentifier } from '../types/uniqueIdentifier';
 import { IUser, IUserWithoutId } from '../types/userType';
 import { User } from './schemas/userSchema';
 
-export const create = async (user: IUserWithoutId): Promise<IUser> => {
+type UserCreate = Omit<IUserWithoutId, 'refreshToken'>;
+
+export const create = async (user: UserCreate): Promise<IUser> => {
   return (await User.create(user)).toObject();
 };
 
@@ -13,14 +15,19 @@ export const getAll = async (): Promise<IUser[]> => {
 export const findOneByUsernameOrId = async (
   query: Partial<UserUniqueIdentifier>
 ): Promise<IUser> => {
-  return (
-    (await User.findOne(query)) ||
-    throwUserNotFoundError()
-  );
+  return (await User.findOne(query)) || throwUserNotFoundError();
 };
 
 export const findById = async (id: string): Promise<IUser> => {
   return (await User.findById(id)) || throwUserNotFoundError();
+};
+
+export const findByToken = async ({
+  refreshToken,
+}: {
+  refreshToken: string;
+}): Promise<IUser | null> => {
+  return await User.findOne({ 'refreshToken.token': refreshToken });
 };
 
 export const isExisting = async (

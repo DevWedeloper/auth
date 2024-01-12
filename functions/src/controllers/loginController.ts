@@ -1,8 +1,7 @@
 import bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import * as RefreshToken from '../models/refreshAccessTokenModel';
 import * as User from '../models/userModel';
+import { calculateExpiresAt } from '../utils/expiresAt';
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -14,6 +13,7 @@ export const login = async (
   next: NextFunction
 ): Promise<void | Response> => {
   try {
+    const cookies = req.cookies;
     const { username, password } = req.body;
 
     const user = await User.isExisting({ username });
@@ -28,51 +28,56 @@ export const login = async (
       });
     }
 
-    const expiresInDays = process.env.REFRESH_TOKEN_EXPIRATION!;
-    const expiresAt = new Date(
-      Date.now() + parseInt(expiresInDays) * 24 * 60 * 60 * 1000
-    );
-
-    let refreshTokenEntry = await RefreshToken.isUnique({
-      userId: user._id.toString(),
-    });
-    if (!refreshTokenEntry) {
-      const refreshToken = generateRefreshToken({
-        userId: user._id,
-        username: user.username,
-        role: user.role,
-      });
-
-      refreshTokenEntry = await RefreshToken.create({
-        userId: user._id.toString(),
-        username: user.username,
-        token: refreshToken,
-        expiresAt: expiresAt,
-      });
-    }
-
-    const refreshTokenData = jwt.decode(refreshTokenEntry.token) as JwtPayload;
-    const currentTime = Math.floor(Date.now() / 1000);
-    if (refreshTokenData.exp! < currentTime) {
-      const newRefreshToken = generateRefreshToken({
-        userId: user._id,
-        username: user.username,
-        role: user.role,
-      });
-
-      refreshTokenEntry = await RefreshToken.updateById(
-        refreshTokenEntry._id.toString(),
-        {
-          token: newRefreshToken,
-          expiresAt: expiresAt,
-        }
-      );
-    }
-
     const accessToken = generateAccessToken({
       userId: user._id,
       username: user.username,
       role: user.role,
+    });
+
+    const refreshToken = generateRefreshToken({
+      userId: user._id,
+      username: user.username,
+      role: user.role,
+    });
+
+    let newRefreshTokenArray = !cookies.refreshToken
+      ? user.refreshToken
+      : user.refreshToken.filter((rt) => rt.token !== cookies.refreshToken);
+
+    if (cookies.refreshToken) {
+      const foundToken = await User.findByToken({
+        refreshToken: cookies.refreshToken,
+      });
+      if (!foundToken) {
+        newRefreshTokenArray = [];
+      }
+
+      res.clearCookie('accessToken', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      });
+      res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      });
+    }
+
+    const updatedUser = await User.updateById(user._id, {
+      refreshToken: [
+        ...newRefreshTokenArray,
+        { token: refreshToken, expiresAt: calculateExpiresAt() },
+      ],
+    });
+
+    const currentDate = new Date();
+    const validRefreshTokens = updatedUser.refreshToken.filter(
+      (rt) => new Date(rt.expiresAt) > currentDate
+    );
+
+    await User.updateById(user._id, {
+      refreshToken: [...validRefreshTokens],
     });
 
     res.cookie('accessToken', accessToken, {
@@ -80,7 +85,7 @@ export const login = async (
       secure: true,
       sameSite: 'none',
     });
-    res.cookie('refreshToken', refreshTokenEntry.token, {
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
