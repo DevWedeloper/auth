@@ -4,15 +4,15 @@ export const calculateExpiresAt = () => {
     if (!match) {
       return undefined;
     }
-  
+
     const value = parseInt(match[1]);
     const unit = match[2];
-  
+
     switch (unit) {
       case 's':
         return value * 1000;
       case 'm':
-        return value * 60 * 1000; 
+        return value * 60 * 1000;
       case 'h':
         return value * 60 * 60 * 1000;
       case 'd':
@@ -21,7 +21,7 @@ export const calculateExpiresAt = () => {
         return undefined;
     }
   };
-  
+
   const expiresIn = process.env.REFRESH_TOKEN_EXPIRATION as string;
   const expiresInMilliseconds = parseDuration(expiresIn);
 

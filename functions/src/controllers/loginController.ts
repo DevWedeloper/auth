@@ -77,9 +77,7 @@ export const login = async (
     );
 
     await User.updateById(user._id, {
-      refreshToken: [
-        ...validRefreshTokens
-      ],
+      refreshToken: [...validRefreshTokens],
     });
 
     res.cookie('accessToken', accessToken, {
