@@ -42,8 +42,6 @@ export const refreshAccessToken = async (
           refreshToken,
           refreshTokenSecret
         ) as JwtPayload;
-        console.log('breach detected!');
-
         const hackedUser = await User.findOneByUsernameOrId({
           username: decoded.username,
         });
@@ -90,13 +88,12 @@ export const refreshAccessToken = async (
       role: decoded.role,
     });
 
-    const updatedUser = await User.updateById(user._id, {
+    await User.updateById(user._id, {
       refreshToken: [
         ...newRefreshTokenArray,
         { token: newRefreshToken, expiresAt: calculateExpiresAt() },
       ],
     });
-    console.log(updatedUser);
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
