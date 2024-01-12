@@ -28,7 +28,7 @@ export const logout = async (
     }
 
     const newRefreshTokenArray = user.refreshToken.filter(
-      (rt) => rt !== refreshToken
+      (rt) => rt.token !== refreshToken
     );
     await User.updateById(user._id, {
       refreshToken: [...newRefreshTokenArray],

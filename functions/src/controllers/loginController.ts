@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
 import * as User from '../models/userModel';
+import { calculateExpiresAt } from '../utils/expiresAt';
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -41,7 +42,7 @@ export const login = async (
 
     let newRefreshTokenArray = !cookies.refreshToken
       ? user.refreshToken
-      : user.refreshToken.filter((rt) => rt !== cookies.refreshToken);
+      : user.refreshToken.filter((rt) => rt.token !== cookies.refreshToken);
 
     if (cookies.refreshToken) {
       const foundToken = await User.findByToken({
@@ -63,8 +64,22 @@ export const login = async (
       });
     }
 
+    const updatedUser = await User.updateById(user._id, {
+      refreshToken: [
+        ...newRefreshTokenArray,
+        { token: refreshToken, expiresAt: calculateExpiresAt() },
+      ],
+    });
+
+    const currentDate = new Date();
+    const validRefreshTokens = updatedUser.refreshToken.filter(
+      (rt) => new Date(rt.expiresAt) > currentDate
+    );
+
     await User.updateById(user._id, {
-      refreshToken: [...newRefreshTokenArray, refreshToken],
+      refreshToken: [
+        ...validRefreshTokens
+      ],
     });
 
     res.cookie('accessToken', accessToken, {

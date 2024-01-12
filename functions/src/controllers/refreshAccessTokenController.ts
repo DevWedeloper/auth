@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 import * as User from '../models/userModel';
-import { generateAccessToken, generateRefreshToken } from '../utils/tokenGenerator';
+import { calculateExpiresAt } from '../utils/expiresAt';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from '../utils/tokenGenerator';
 
 export const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET as string;
 
@@ -39,7 +43,7 @@ export const refreshAccessToken = async (
           refreshTokenSecret
         ) as JwtPayload;
         console.log('breach detected!');
-        
+
         const hackedUser = await User.findOneByUsernameOrId({
           username: decoded.username,
         });
@@ -57,15 +61,12 @@ export const refreshAccessToken = async (
     }
 
     const newRefreshTokenArray = user.refreshToken.filter(
-      (rt) => rt !== refreshToken
+      (rt) => rt.token !== refreshToken
     );
 
     let decoded;
     try {
-      decoded = jwt.verify(
-        refreshToken,
-        refreshTokenSecret
-      ) as JwtPayload;
+      decoded = jwt.verify(refreshToken, refreshTokenSecret) as JwtPayload;
     } catch (error) {
       await User.updateById(user._id, {
         refreshToken: [...newRefreshTokenArray],
@@ -90,10 +91,12 @@ export const refreshAccessToken = async (
     });
 
     const updatedUser = await User.updateById(user._id, {
-      refreshToken: [...newRefreshTokenArray, newRefreshToken]
+      refreshToken: [
+        ...newRefreshTokenArray,
+        { token: newRefreshToken, expiresAt: calculateExpiresAt() },
+      ],
     });
     console.log(updatedUser);
-    
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,

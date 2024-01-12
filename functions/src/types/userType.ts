@@ -3,7 +3,7 @@ export type IUser = {
   username: string;
   password: string;
   role: 'admin' | 'standard';
-  refreshToken: string[];
+  refreshToken: { token: string; expiresAt: Date }[];
 };
 
 export type IUserWithoutId = Omit<IUser, '_id'>;

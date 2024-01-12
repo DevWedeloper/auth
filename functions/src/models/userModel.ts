@@ -22,10 +22,12 @@ export const findById = async (id: string): Promise<IUser> => {
   return (await User.findById(id)) || throwUserNotFoundError();
 };
 
-export const findByToken = async (
-  { refreshToken }: { refreshToken: string }
-): Promise<IUser | null> => {
-  return await User.findOne({ refreshToken });
+export const findByToken = async ({
+  refreshToken,
+}: {
+  refreshToken: string;
+}): Promise<IUser | null> => {
+  return await User.findOne({ 'refreshToken.token': refreshToken });
 };
 
 export const isExisting = async (
