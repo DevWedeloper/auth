@@ -76,9 +76,11 @@ export const login = async (
       (rt) => new Date(rt.expiresAt) > currentDate
     );
 
-    await User.updateById(user._id, {
-      refreshToken: [...validRefreshTokens],
-    });
+    if (validRefreshTokens.length !== updatedUser.refreshToken.length) {
+      await User.updateById(user._id, {
+        refreshToken: [...validRefreshTokens],
+      });
+    }
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
