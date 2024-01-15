@@ -1,7 +1,8 @@
 export type IUser = {
   _id: string;
-  username: string;
-  password: string;
+  email: string;
+  username?: string;
+  password?: string;
   role: 'admin' | 'standard';
   refreshToken: { token: string; expiresAt: Date }[];
 };

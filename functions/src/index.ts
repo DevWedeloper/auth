@@ -24,6 +24,7 @@ const connectToDatabase = async () => {
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(mongoSanitize());
 app.use('/user', userRouter);
 app.use('/', authActionsRoute);

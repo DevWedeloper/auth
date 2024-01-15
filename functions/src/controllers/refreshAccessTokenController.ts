@@ -43,7 +43,7 @@ export const refreshAccessToken = async (
           refreshTokenSecret
         ) as JwtPayload;
         const hackedUser = await User.findOneByUsernameOrId({
-          username: decoded.username,
+          _id: decoded._id,
         });
         await User.updateById(hackedUser._id, {
           refreshToken: [],

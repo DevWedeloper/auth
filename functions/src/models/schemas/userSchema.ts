@@ -2,9 +2,19 @@ import { Schema, model } from 'mongoose';
 import { IUserWithoutId } from '../../types/userType';
 
 const userSchema: Schema<IUserWithoutId> = new Schema({
-  username: {
+  email: {
     type: String,
     required: true,
+    unique: true,
+    validate: {
+      validator: (value: string) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      },
+      message: 'Invalid email address',
+    },
+  },
+  username: {
+    type: String,
     unique: true,
     minlength: 6,
     maxlength: 20,
@@ -12,7 +22,6 @@ const userSchema: Schema<IUserWithoutId> = new Schema({
   },
   password: {
     type: String,
-    required: true,
     validate: {
       validator: (value: string) => {
         return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(value);
