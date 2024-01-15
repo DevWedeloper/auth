@@ -8,10 +8,11 @@ export const createUser = async (
   next: NextFunction
 ): Promise<void | Response> => {
   try {
-    const { username, password, role } = req.body;
+    const { username, password, email, role } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
+      email,
       username,
       password: hashedPassword,
       role,

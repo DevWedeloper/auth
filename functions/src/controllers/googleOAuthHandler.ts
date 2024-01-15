@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
+import { OAuth2Client } from 'google-auth-library';
 import * as User from '../models/userModel';
 import { calculateExpiresAt } from '../utils/expiresAt';
 import {
@@ -7,38 +7,34 @@ import {
   generateRefreshToken,
 } from '../utils/tokenGenerator';
 
-export const login = async (
+const clientId = process.env.GOOGLE_CLIENT_ID as string;
+
+export const googleOAuthHandler = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void | Response> => {
   try {
     const cookies = req.cookies;
-    const { username, password } = req.body;
+    const credential = req.body.credential;
+    const redirectUri = req.query.redirect_uri as string;
+    const client = new OAuth2Client(clientId);
 
-    const user = await User.isExisting({ username });
-    if (!user) {
-      return res.status(401).json({
-        error: 'Invalid username',
-      });
-    }
-    if (!bcrypt.compareSync(password, user.password || '')) {
-      return res.status(401).json({
-        error: 'Invalid password',
-      });
-    }
-
-    const accessToken = generateAccessToken({
-      userId: user._id,
-      username: user.username || '',
-      role: user.role,
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: clientId,
     });
+    const payload = ticket.getPayload();
+    if (!payload) {
+      return res.status(400).send('Invalid token');
+    }
 
-    const refreshToken = generateRefreshToken({
-      userId: user._id,
-      username: user.username || '',
-      role: user.role,
-    });
+    const email = payload.email;
+    if (!email) {
+      return res.status(422).send('Email not provided in the token payload');
+    }
+
+    const user = await User.findByEmailOrCreate(email);
 
     let newRefreshTokenArray = !cookies.refreshToken
       ? user.refreshToken
@@ -63,6 +59,18 @@ export const login = async (
         sameSite: 'none',
       });
     }
+
+    const accessToken = generateAccessToken({
+      userId: user._id,
+      username: user.username || '',
+      role: user.role,
+    });
+
+    const refreshToken = generateRefreshToken({
+      userId: user._id,
+      username: user.username || '',
+      role: user.role,
+    });
 
     const updatedUser = await User.updateById(user._id, {
       refreshToken: [
@@ -92,7 +100,7 @@ export const login = async (
       secure: true,
       sameSite: 'none',
     });
-    return res.status(201).send();
+    return res.redirect(redirectUri);
   } catch (error) {
     next(error);
   }

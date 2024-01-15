@@ -8,6 +8,19 @@ export const create = async (user: UserCreate): Promise<IUser> => {
   return (await User.create(user)).toObject();
 };
 
+export const findByEmailOrCreate = async (email: string): Promise<IUser> => {
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return existingUser.toObject();
+  }
+  const newUser: IUserWithoutId = {
+    email,
+    role: 'standard',
+    refreshToken: [],
+  };
+  return (await User.create(newUser)).toObject();
+};
+
 export const getAll = async (): Promise<IUser[]> => {
   return await User.find();
 };

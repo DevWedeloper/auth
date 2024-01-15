@@ -11,7 +11,7 @@ export const corsOptions = {
     origin: string | undefined,
     callback: (arg0: Error | null, arg1: boolean | undefined) => void
   ) => {
-    if (allowedOrigins.includes(origin) || !origin) {
+    if (allowedOrigins.includes(origin) || !origin || origin === 'null') {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'), false);
