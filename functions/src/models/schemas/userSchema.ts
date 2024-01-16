@@ -15,7 +15,6 @@ const userSchema: Schema<IUserWithoutId> = new Schema({
   },
   username: {
     type: String,
-    unique: true,
     minlength: 6,
     maxlength: 20,
     match: /^[A-Za-z0-9_]*$/,
