@@ -100,6 +100,10 @@ export const googleOAuthHandler = async (
       secure: true,
       sameSite: 'none',
     });
+
+    if (req.headers.origin === redirectUri) {
+      return res.sendStatus(200);
+    }
     return res.redirect(redirectUri);
   } catch (error) {
     next(error);
