@@ -15,6 +15,7 @@ export const findByEmailOrCreate = async (email: string): Promise<IUser> => {
   }
   const newUser: IUserWithoutId = {
     email,
+    username: null,
     role: 'standard',
     refreshToken: [],
   };

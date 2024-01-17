@@ -15,10 +15,10 @@ const userSchema: Schema<IUserWithoutId> = new Schema({
   },
   username: {
     type: String,
-    unique: true,
     minlength: 6,
     maxlength: 20,
     match: /^[A-Za-z0-9_]*$/,
+    index: true,
   },
   password: {
     type: String,
@@ -29,7 +29,6 @@ const userSchema: Schema<IUserWithoutId> = new Schema({
       message:
         'Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, and one digit.',
     },
-    index: true,
   },
   role: { type: String, enum: ['admin', 'standard'], default: 'standard' },
   refreshToken: {
