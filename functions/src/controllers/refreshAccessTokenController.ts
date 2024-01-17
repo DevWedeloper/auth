@@ -62,6 +62,10 @@ export const refreshAccessToken = async (
       (rt) => rt.token !== refreshToken
     );
 
+    const previousAutoLogoutAtValue = user.refreshToken
+      .filter((rt) => rt.token === refreshToken)
+      .map((rt) => rt.autoLogoutAt);
+
     let decoded;
     try {
       decoded = jwt.verify(refreshToken, refreshTokenSecret) as JwtPayload;
@@ -91,7 +95,11 @@ export const refreshAccessToken = async (
     await User.updateById(user._id, {
       refreshToken: [
         ...newRefreshTokenArray,
-        { token: newRefreshToken, expiresAt: calculateExpiresAt() },
+        {
+          token: newRefreshToken,
+          expiresAt: calculateExpiresAt(),
+          autoLogoutAt: previousAutoLogoutAtValue[0],
+        },
       ],
     });
 

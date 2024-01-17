@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
 import * as User from '../models/userModel';
-import { calculateExpiresAt } from '../utils/expiresAt';
+import { calculateAutoLogoutAt, calculateExpiresAt } from '../utils/expiresAt';
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -67,7 +67,11 @@ export const login = async (
     const updatedUser = await User.updateById(user._id, {
       refreshToken: [
         ...newRefreshTokenArray,
-        { token: refreshToken, expiresAt: calculateExpiresAt() },
+        {
+          token: refreshToken,
+          expiresAt: calculateExpiresAt(),
+          autoLogoutAt: calculateAutoLogoutAt(),
+        },
       ],
     });
 

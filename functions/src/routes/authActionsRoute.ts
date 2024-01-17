@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { getAutoLogoutAt } from '../controllers/getAutoLogoutAt';
 import { getRole } from '../controllers/getRole';
 import { googleOAuthHandler } from '../controllers/googleOAuthHandler';
 import { isLoggedIn } from '../controllers/isLoggedIn';
@@ -14,5 +15,6 @@ router.post('/refresh', refreshAccessToken);
 router.get('/isLoggedIn', isLoggedIn);
 router.get('/getRole', getRole);
 router.post('/sessions/oauth/google', googleOAuthHandler);
+router.get('/autoLogoutAt', getAutoLogoutAt);
 
 export default router;
