@@ -1,6 +1,10 @@
 import bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
 import * as User from '../models/userModel';
+import {
+  clearRefreshAndAccessTokenCookies,
+  setRefreshAndAccessTokenCookies,
+} from '../utils/authHelper';
 import { calculateAutoLogoutAt, calculateExpiresAt } from '../utils/expiresAt';
 import {
   generateAccessToken,
@@ -52,16 +56,7 @@ export const login = async (
         newRefreshTokenArray = [];
       }
 
-      res.clearCookie('accessToken', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      });
-      res.clearCookie('refreshToken', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      });
+      clearRefreshAndAccessTokenCookies(res);
     }
 
     const updatedUser = await User.updateById(user._id, {
@@ -86,16 +81,7 @@ export const login = async (
       });
     }
 
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
+    setRefreshAndAccessTokenCookies(res, { refreshToken, accessToken });
     return res.status(201).send();
   } catch (error) {
     next(error);

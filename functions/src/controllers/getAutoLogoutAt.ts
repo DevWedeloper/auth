@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import * as User from '../models/userModel';
+import { clearRefreshAndAccessTokenCookies } from '../utils/authHelper';
 
 export const getAutoLogoutAt = async (
   req: Request,
@@ -31,16 +32,7 @@ export const getAutoLogoutAt = async (
         refreshToken: [...newRefreshTokenArray],
       });
 
-      res.clearCookie('accessToken', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      });
-      res.clearCookie('refreshToken', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      });
+      clearRefreshAndAccessTokenCookies(res);
       return res.status(401).json({ error: 'Session expired' });
     }
 

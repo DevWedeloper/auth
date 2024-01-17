@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt, { JwtPayload, TokenExpiredError } from 'jsonwebtoken';
 import * as User from '../models/userModel';
+import {
+  clearRefreshAndAccessTokenCookies,
+  setRefreshAndAccessTokenCookies,
+} from '../utils/authHelper';
 import { calculateExpiresAt } from '../utils/expiresAt';
 import {
   generateAccessToken,
@@ -24,16 +28,7 @@ export const refreshAccessToken = async (
       });
     }
 
-    res.clearCookie('accessToken', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
-    res.clearCookie('refreshToken', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
+    clearRefreshAndAccessTokenCookies(res);
 
     const user = await User.findByToken({ refreshToken });
     if (!user) {
@@ -103,15 +98,9 @@ export const refreshAccessToken = async (
       ],
     });
 
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
-    res.cookie('refreshToken', newRefreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+    setRefreshAndAccessTokenCookies(res, {
+      refreshToken: newRefreshToken,
+      accessToken,
     });
     return res.status(201).send();
   } catch (error) {
