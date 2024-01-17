@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import * as User from '../models/userModel';
+import { clearRefreshAndAccessTokenCookies } from '../utils/authHelper';
 
 export const logout = async (
   req: Request,
@@ -14,16 +15,7 @@ export const logout = async (
 
     const user = await User.findByToken({ refreshToken });
     if (!user) {
-      res.clearCookie('accessToken', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      });
-      res.clearCookie('refreshToken', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      });
+      clearRefreshAndAccessTokenCookies(res);
       return res.sendStatus(204);
     }
 
@@ -34,16 +26,7 @@ export const logout = async (
       refreshToken: [...newRefreshTokenArray],
     });
 
-    res.clearCookie('accessToken', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
-    res.clearCookie('refreshToken', {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
+    clearRefreshAndAccessTokenCookies(res);
     return res.status(204).send();
   } catch (error) {
     next(error);

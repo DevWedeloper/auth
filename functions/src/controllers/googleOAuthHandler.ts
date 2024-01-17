@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import * as User from '../models/userModel';
+import { clearRefreshAndAccessTokenCookies, setRefreshAndAccessTokenCookies } from '../utils/authHelper';
 import { calculateAutoLogoutAt, calculateExpiresAt } from '../utils/expiresAt';
 import {
   generateAccessToken,
@@ -48,16 +49,7 @@ export const googleOAuthHandler = async (
         newRefreshTokenArray = [];
       }
 
-      res.clearCookie('accessToken', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      });
-      res.clearCookie('refreshToken', {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      });
+      clearRefreshAndAccessTokenCookies(res);
     }
 
     const accessToken = generateAccessToken({
@@ -94,16 +86,7 @@ export const googleOAuthHandler = async (
       });
     }
 
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
+    setRefreshAndAccessTokenCookies(res, { refreshToken, accessToken });
 
     if (req.headers.origin === redirectUri) {
       return res.sendStatus(200);
