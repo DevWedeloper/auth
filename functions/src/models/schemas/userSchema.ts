@@ -41,6 +41,9 @@ const userSchema: Schema<IUserWithoutId> = new Schema({
         expiresAt: {
           type: Date,
         },
+        autoLogoutAt: {
+          type: Date,
+        },
       },
     ],
   },

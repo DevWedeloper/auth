@@ -4,7 +4,7 @@ export type IUser = {
   username: string | null;
   password?: string;
   role: 'admin' | 'standard';
-  refreshToken: { token: string; expiresAt: Date }[];
+  refreshToken: { token: string; expiresAt: Date; autoLogoutAt: Date }[];
 };
 
 export type IUserWithoutId = Omit<IUser, '_id'>;
