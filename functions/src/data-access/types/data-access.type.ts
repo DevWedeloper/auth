@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
-import { UserUniqueIdentifier } from '../../types/unique-identifier';
-import { IUser, IUserWithoutId } from '../../types/user-type';
+import { UserUniqueIdentifier } from '../../types/unique-identifier.type';
+import { IUser, IUserWithoutId } from '../../types/user.type';
 
 export type UserModel = Model<IUserWithoutId>;
 

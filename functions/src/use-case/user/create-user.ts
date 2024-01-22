@@ -1,5 +1,5 @@
 import { UserDb } from '../../data-access/types/data-access.type';
-import { IUserWithoutId } from '../../types/user-type';
+import { IUserWithoutId } from '../../types/user.type';
 import { makeUser } from '../../user/user';
 import { RequiredParameterError } from '../../utils/errors';
 import { requiredParam } from '../../utils/validation-utils';

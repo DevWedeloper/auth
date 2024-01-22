@@ -1,4 +1,4 @@
-import { IUserWithoutId } from '../types/user-type';
+import { IUserWithoutId } from '../types/user.type';
 import { deepFreeze } from '../utils/deep-freeze';
 import {
   requiredParam,
