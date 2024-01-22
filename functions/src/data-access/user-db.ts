@@ -1,5 +1,5 @@
-import { UserUniqueIdentifier } from '../types/unique-identifier';
-import { IUser, IUserWithoutId } from '../types/user-type';
+import { UserUniqueIdentifier } from '../types/unique-identifier.type';
+import { IUser, IUserWithoutId } from '../types/user.type';
 import { NotFoundError } from '../utils/errors';
 import { UserModel } from './types/data-access.type';
 import {
