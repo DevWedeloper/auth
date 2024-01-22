@@ -6,7 +6,7 @@ export const makeLogoutEndpoint = ({ logout }: { logout: logout }) => {
   const logoutEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       await logout(req.cookies.refreshToken);

@@ -9,7 +9,7 @@ export const makeLoginEndpoint = ({ login }: { login: login }) => {
   const loginEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       if (req.cookies.refreshToken) {
@@ -19,7 +19,7 @@ export const makeLoginEndpoint = ({ login }: { login: login }) => {
       const { accessToken, refreshToken } = await login(
         req.body.username,
         req.body.password,
-        req.cookies.refreshToken
+        req.cookies.refreshToken,
       );
 
       setRefreshAndAccessTokenCookies(res, { refreshToken, accessToken });

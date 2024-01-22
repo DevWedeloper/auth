@@ -9,7 +9,7 @@ export const makeCreateUserEndpoint = ({
   const createUserEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const user = await createUser(req.body.user);

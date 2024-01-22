@@ -9,7 +9,7 @@ export const makeGetUserByIdEndpoint = ({
   const getUserByIdEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const user = await getUserById(req.params.id);

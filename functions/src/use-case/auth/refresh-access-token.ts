@@ -26,7 +26,7 @@ export const makeRefreshAccessToken = ({
       try {
         const decoded = verify(
           refreshToken,
-          refreshTokenSecret
+          refreshTokenSecret,
         ) as TokenPayload;
         const hackedUser = await userDb.findOneByUsernameOrId({
           _id: decoded._id,
@@ -41,7 +41,7 @@ export const makeRefreshAccessToken = ({
     }
 
     const newRefreshTokenArray = user.refreshToken.filter(
-      (rt) => rt.token !== refreshToken
+      (rt) => rt.token !== refreshToken,
     );
 
     const previousAutoLogoutAtValue = user.refreshToken

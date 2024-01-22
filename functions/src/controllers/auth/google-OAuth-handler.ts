@@ -13,7 +13,7 @@ export const makeGoogleOAuthHandlerEndpoint = ({
   const googleOAuthHandlerEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const redirectUri = req.query.redirect_uri as string;
@@ -24,7 +24,7 @@ export const makeGoogleOAuthHandlerEndpoint = ({
 
       const { accessToken, refreshToken } = await googleOAuthHandler(
         req.cookies.refreshToken,
-        req.body.credential
+        req.body.credential,
       );
 
       setRefreshAndAccessTokenCookies(res, { refreshToken, accessToken });

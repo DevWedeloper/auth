@@ -9,7 +9,7 @@ export const makeGetAllUsersEndpoint = ({
   const getAllUserEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const users = await getAllUsers();

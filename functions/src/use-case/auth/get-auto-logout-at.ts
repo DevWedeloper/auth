@@ -19,7 +19,7 @@ export const makeGetAutoLogoutAt = ({ userDb }: { userDb: UserDb }) => {
 
     if (autoLogoutAtValue[0] < currentDate) {
       const newRefreshTokenArray = user.refreshToken.filter(
-        (rt) => rt.token !== refreshToken
+        (rt) => rt.token !== refreshToken,
       );
       await userDb.updateById(user._id, {
         refreshToken: [...newRefreshTokenArray],

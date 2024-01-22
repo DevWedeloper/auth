@@ -13,13 +13,13 @@ export const makeRefreshAccessTokenEndpoint = ({
   const refreshAccessTokenEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       clearRefreshAndAccessTokenCookies(res);
 
       const { accessToken, refreshToken } = await refreshAccessToken(
-        req.cookies.refreshToken
+        req.cookies.refreshToken,
       );
 
       setRefreshAndAccessTokenCookies(res, {

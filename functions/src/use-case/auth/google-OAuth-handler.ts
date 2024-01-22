@@ -13,7 +13,7 @@ const clientId = process.env.GOOGLE_CLIENT_ID as string;
 export const makeGoogleOAuthHandler = ({ userDb }: { userDb: UserDb }) => {
   const googleOAuthHandler = async (
     oldRefreshToken: string | undefined,
-    credential: string
+    credential: string,
   ) => {
     requiredParam(credential, 'Credential');
 
@@ -30,7 +30,7 @@ export const makeGoogleOAuthHandler = ({ userDb }: { userDb: UserDb }) => {
     const email = payload.email;
     if (!email) {
       throw new InvalidOperationError(
-        'Email not provided in the token payload.'
+        'Email not provided in the token payload.',
       );
     }
 
@@ -74,7 +74,7 @@ export const makeGoogleOAuthHandler = ({ userDb }: { userDb: UserDb }) => {
 
     const currentDate = new Date();
     const validRefreshTokens = updatedUser.refreshToken.filter(
-      (rt) => new Date(rt.expiresAt) > currentDate
+      (rt) => new Date(rt.expiresAt) > currentDate,
     );
 
     if (validRefreshTokens.length !== updatedUser.refreshToken.length) {

@@ -45,7 +45,7 @@ export const makeUserDb = ({ User }: { User: UserModel }) => {
   };
 
   const findOneByUsernameOrId = async (
-    query: Partial<UserUniqueIdentifier>
+    query: Partial<UserUniqueIdentifier>,
   ): Promise<IUser> => {
     try {
       return (
@@ -95,14 +95,14 @@ export const makeUserDb = ({ User }: { User: UserModel }) => {
   };
 
   const isExisting = async (
-    query: Partial<UserUniqueIdentifier>
+    query: Partial<UserUniqueIdentifier>,
   ): Promise<IUser | null> => {
     return await User.findOne(query);
   };
 
   const updateById = async (
     id: string,
-    query: Partial<IUserWithoutId>
+    query: Partial<IUserWithoutId>,
   ): Promise<IUser> => {
     try {
       return (

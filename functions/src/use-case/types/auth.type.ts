@@ -6,7 +6,7 @@ export type getRole = (accessToken: string) => { role: string };
 
 export type googleOAuthHandler = (
   oldRefreshToken: string | undefined,
-  credential: string
+  credential: string,
 ) => Promise<{
   accessToken: string;
   refreshToken: string;
@@ -22,7 +22,7 @@ export type loggedInUser = (accessToken: string | undefined) => {
 export type login = (
   username: string,
   password: string,
-  oldRefreshToken: string | undefined
+  oldRefreshToken: string | undefined,
 ) => Promise<{
   accessToken: string;
   refreshToken: string;

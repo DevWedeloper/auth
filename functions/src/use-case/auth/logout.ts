@@ -12,7 +12,7 @@ export const makeLogout = ({ userDb }: { userDb: UserDb }) => {
     }
 
     const newRefreshTokenArray = user.refreshToken.filter(
-      (rt) => rt.token !== refreshToken
+      (rt) => rt.token !== refreshToken,
     );
 
     await userDb.updateById(user._id, {

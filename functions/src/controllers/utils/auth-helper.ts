@@ -7,7 +7,7 @@ interface TokenObject {
 
 export const setRefreshAndAccessTokenCookies = (
   res: Response,
-  tokens: TokenObject
+  tokens: TokenObject,
 ): void => {
   const { accessToken, refreshToken } = tokens;
   res.cookie('accessToken', accessToken, {

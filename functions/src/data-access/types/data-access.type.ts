@@ -9,7 +9,7 @@ export type UserDb = {
   findByEmailOrCreate: (email: string) => Promise<IUser>;
   getAll: () => Promise<IUser[]>;
   findOneByUsernameOrId: (
-    query: Partial<UserUniqueIdentifier>
+    query: Partial<UserUniqueIdentifier>,
   ) => Promise<IUser>;
   findById: (id: string) => Promise<IUser>;
   findByToken: (params: { refreshToken: string }) => Promise<IUser | null>;

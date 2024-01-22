@@ -18,7 +18,7 @@ export const makeLogin = ({
   const login = async (
     username: string,
     password: string,
-    oldRefreshToken: string | undefined
+    oldRefreshToken: string | undefined,
   ) => {
     requiredParam(username, 'Username');
     requiredParam(password, 'Password');
@@ -69,7 +69,7 @@ export const makeLogin = ({
 
     const currentDate = new Date();
     const validRefreshTokens = updatedUser.refreshToken.filter(
-      (rt) => new Date(rt.expiresAt) > currentDate
+      (rt) => new Date(rt.expiresAt) > currentDate,
     );
 
     if (validRefreshTokens.length !== updatedUser.refreshToken.length) {

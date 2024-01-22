@@ -5,7 +5,7 @@ export const makeGetRoleEndpoint = ({ getRole }: { getRole: getRole }) => {
   const getRoleEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const { role } = getRole(req.cookies.accessToken);

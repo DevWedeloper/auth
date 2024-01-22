@@ -11,7 +11,7 @@ export const makeGetAutoLogoutAtEndpoint = ({
   const getAutoLogoutAtEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const { expired } = await getAutoLogoutAt(req.body.refreshToken);
