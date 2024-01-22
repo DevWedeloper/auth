@@ -27,7 +27,8 @@ export const makeLogin = ({
     if (!user) {
       throw new UnauthorizedError('Invalid username');
     }
-    if (comparePassword(password, user.password || '')) {
+
+    if (!comparePassword(password, user.password || '')) {
       throw new UnauthorizedError('Invalid password');
     }
 
