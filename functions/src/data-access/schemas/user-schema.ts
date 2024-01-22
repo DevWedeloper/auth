@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { IUserWithoutId } from '../../types/userType';
+import { IUserWithoutId } from '../../types/user-type';
 
 const userSchema: Schema<IUserWithoutId> = new Schema({
   email: {
