@@ -3,7 +3,7 @@ import {
   UserDb,
 } from '../../data-access/types/data-access.type';
 import { makeUser } from '../../user/user';
-import { ForbiddenError, RequiredParameterError } from '../../utils/errors';
+import { ForbiddenError } from '../../utils/errors';
 import { requiredParam } from '../../utils/validation-utils';
 import { HashPassword } from '../types/bcrypt.type';
 
@@ -25,9 +25,7 @@ export const makeCreateUser = ({
     requiredParam(email, 'Email');
     requiredParam(username, 'Username');
     requiredParam(verificationCode, 'Verification Code');
-    if (!password) {
-      throw new RequiredParameterError('Password is required.');
-    }
+    requiredParam(password, 'Password');
 
     // TODO: Send tokens
     const retrievedToken = await emailVerificationTokenDb.findByEmail(email);
@@ -43,6 +41,7 @@ export const makeCreateUser = ({
       refreshToken: [],
     });
     const hashedPassword = await hash(password, 10);
+
     return userDb.create({
       ...user,
       password: hashedPassword,
