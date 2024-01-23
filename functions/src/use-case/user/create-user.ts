@@ -27,7 +27,6 @@ export const makeCreateUser = ({
     requiredParam(verificationCode, 'Verification Code');
     requiredParam(password, 'Password');
 
-    // TODO: Send tokens
     const retrievedToken = await emailVerificationTokenDb.findByEmail(email);
     if (retrievedToken.verificationCode !== verificationCode) {
       throw new ForbiddenError('Entered code does not match.');
