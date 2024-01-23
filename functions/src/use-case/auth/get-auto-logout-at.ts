@@ -24,10 +24,6 @@ export const makeGetAutoLogoutAt = ({ userDb }: { userDb: UserDb }) => {
       await userDb.updateById(user._id, {
         refreshToken: [...newRefreshTokenArray],
       });
-
-      // TODO: Place the commented functions on the endpoint when sessionExpired is true
-      // clearRefreshAndAccessTokenCookies(res);
-      // throw new UnauthorizedError('Session expired.');
       return { expired: true };
     }
     return { expired: false };
