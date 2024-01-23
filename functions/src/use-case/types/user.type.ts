@@ -5,6 +5,6 @@ export type createUser = (
   username: string,
   password: string,
   verificationCode: string,
-) => Promise<IUser>;
+) => Promise<void>;
 export type getAllUsers = () => Promise<IUser[]>;
 export type getUserById = (id: string) => Promise<IUser>;

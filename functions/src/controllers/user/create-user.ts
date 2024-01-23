@@ -13,13 +13,13 @@ export const makeCreateUserEndpoint = ({
   ): Promise<void | Response> => {
     try {
       const { email, username, password, verificationCode } = req.body;
-      const user = await createUser(
+      await createUser(
         email,
         username,
         password,
         verificationCode,
       );
-      return res.status(201).json(user);
+      return res.status(201).json();
     } catch (error) {
       next(error);
     }

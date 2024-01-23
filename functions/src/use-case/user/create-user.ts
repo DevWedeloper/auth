@@ -44,7 +44,7 @@ export const makeCreateUser = ({
 
     await emailVerificationTokenDb.deleteByEmail(email);
 
-    return userDb.create({
+    await userDb.create({
       ...user,
       password: hashedPassword,
     });
