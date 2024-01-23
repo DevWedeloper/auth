@@ -12,8 +12,14 @@ export const makeCreateUserEndpoint = ({
     next: NextFunction,
   ): Promise<void | Response> => {
     try {
-      const user = await createUser(req.body.user);
-      return res.status(201).json(user);
+      const { email, username, password, verificationCode } = req.body;
+      await createUser(
+        email,
+        username,
+        password,
+        verificationCode,
+      );
+      return res.status(201).json();
     } catch (error) {
       next(error);
     }

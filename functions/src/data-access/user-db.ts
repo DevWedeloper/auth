@@ -76,6 +76,22 @@ export const makeUserDb = ({ User }: { User: UserModel }) => {
     }
   };
 
+  const findByEmail = async (email: string): Promise<IUser> => {
+    try {
+      return (
+        (await User.findOne({ email }))?.toObject() || throwUserNotFoundError()
+      );
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
+      if (error instanceof Error) {
+        handleMongooseCastObjectIdError(error);
+      }
+      throw new Error('Failed to find user by id.');
+    }
+  };
+
   const findByToken = async ({
     refreshToken,
   }: {
@@ -148,6 +164,7 @@ export const makeUserDb = ({ User }: { User: UserModel }) => {
     getAll,
     findOneByUsernameOrId,
     findById,
+    findByEmail,
     findByToken,
     isExisting,
     updateById,

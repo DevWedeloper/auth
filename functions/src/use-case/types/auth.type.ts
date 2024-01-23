@@ -34,3 +34,5 @@ export type refreshAccessToken = (refreshToken: string | undefined) => Promise<{
   accessToken: string;
   refreshToken: string;
 }>;
+
+export type requestEmailVerificationCode = (email: string) => Promise<void>;

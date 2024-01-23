@@ -6,6 +6,7 @@ import { makeIsLoggedInEndpoint } from './auth/is-logged-in';
 import { makeLoginEndpoint } from './auth/login';
 import { makeLogoutEndpoint } from './auth/logout';
 import { makeRefreshAccessTokenEndpoint } from './auth/refresh-access-token';
+import { makeRequestEmailVerificationCodeEndpoint } from './auth/request-email-verification-code';
 import { makeCreateUserEndpoint } from './user/create-user';
 import { makeGetAllUsersEndpoint } from './user/get-all-users';
 import { makeGetUserByIdEndpoint } from './user/get-user-by-id';
@@ -39,3 +40,7 @@ export const logoutEndpoint = makeLogoutEndpoint({
 export const refreshAccessTokenEndpoint = makeRefreshAccessTokenEndpoint({
   refreshAccessToken: AuthService.refreshAccessToken,
 });
+export const requestEmailVerificationCodeEndpoint =
+  makeRequestEmailVerificationCodeEndpoint({
+    requestEmailVerificationCode: AuthService.requestEmailVerificationCode,
+  });

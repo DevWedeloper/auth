@@ -12,6 +12,7 @@ const userSchema: Schema<IUserWithoutId> = new Schema({
       },
       message: 'Invalid email address',
     },
+    index: true,
   },
   username: {
     type: String,
