@@ -7,6 +7,7 @@ import {
   loginEndpoint,
   logoutEndpoint,
   refreshAccessTokenEndpoint,
+  requestEmailVerificationCodeEndpoint,
 } from '../controllers';
 
 const router = Router();
@@ -18,5 +19,6 @@ router.get('/isLoggedIn', isLoggedInEndpoint);
 router.get('/getRole', getRoleEndpoint);
 router.post('/sessions/oauth/google', googleOAuthHandlerEndpoint);
 router.get('/autoLogoutAt', getAutoLogoutAtEndpoint);
+router.post('/requestCode', requestEmailVerificationCodeEndpoint);
 
 export default router;
