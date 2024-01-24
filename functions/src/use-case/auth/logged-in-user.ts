@@ -16,9 +16,9 @@ export const makeLoggedInUser = ({ verify }: { verify: VerifyToken }) => {
       throw new UnauthorizedError(error);
     }
 
-    const { userId, role } = decodedToken;
+    const { userId, username, role } = decodedToken;
 
-    return { userId, role };
+    return { userId, username, role };
   };
   return loggedInUser;
 };
