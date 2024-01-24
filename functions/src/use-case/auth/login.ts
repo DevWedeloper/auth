@@ -25,11 +25,11 @@ export const makeLogin = ({
 
     const user = await userDb.isExisting({ username });
     if (!user) {
-      throw new UnauthorizedError('Invalid username');
+      throw new UnauthorizedError('Invalid username.');
     }
 
     if (!comparePassword(password, user.password || '')) {
-      throw new UnauthorizedError('Invalid password');
+      throw new UnauthorizedError('Invalid password.');
     }
 
     const accessToken = generateAccessToken({
