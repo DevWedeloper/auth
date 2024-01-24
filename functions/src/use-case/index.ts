@@ -13,15 +13,21 @@ import { makeRequestEmailVerificationCode } from './auth/request-email-verificat
 import { makeCreateUser } from './user/create-user';
 import { makeGetAllUsers } from './user/get-all-users';
 import { makeGetUserById } from './user/get-user-by-id';
+import { makeUpdateUsernameByEmail } from './user/update-username-by-email';
 
 const createUser = makeCreateUser({ userDb, emailVerificationTokenDb, hash });
 const getAllUsers = makeGetAllUsers({ userDb });
 const getUserById = makeGetUserById({ userDb });
+const updateUsernameByEmail = makeUpdateUsernameByEmail({
+  userDb,
+  emailVerificationTokenDb,
+});
 
 export const UserService = Object.freeze({
   createUser,
   getAllUsers,
   getUserById,
+  updateUsernameByEmail,
 });
 
 const getAutoLogoutAt = makeGetAutoLogoutAt({ userDb });
@@ -33,7 +39,6 @@ const login = makeLogin({ userDb, comparePassword: compareSync });
 const logout = makeLogout({ userDb });
 const refreshAccessToken = makeRefreshAccessToken({ userDb, verify });
 const requestEmailVerificationCode = makeRequestEmailVerificationCode({
-  userDb,
   emailVerificationTokenDb,
 });
 
