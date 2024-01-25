@@ -19,29 +19,26 @@ export const makeUserDb = ({ User }: { User: UserModel }) => {
     }
   };
 
-  const findByEmailOrCreate = async (email: string): Promise<IUser> => {
-    try {
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
-        return existingUser.toObject();
-      }
-      const newUser: IUserWithoutId = {
-        email,
-        username: null,
-        role: 'standard',
-        refreshToken: [],
-      };
-      return (await User.create(newUser)).toObject();
-    } catch (error) {
-      if (error instanceof Error) {
-        handleMongooseUniqueConstraintError(error);
-      }
-      throw new Error('Failed to create user.');
-    }
-  };
-
   const getAll = async (): Promise<IUser[]> => {
     return await User.find();
+  };
+
+  const findOneByUsernameOrId = async (
+    query: Partial<UserUniqueIdentifier>,
+  ): Promise<IUser> => {
+    try {
+      return (
+        (await User.findOne(query))?.toObject() || throwUserNotFoundError()
+      );
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
+      if (error instanceof Error) {
+        handleMongooseCastObjectIdError(error);
+      }
+      throw new Error('Failed to find user by name or id.');
+    }
   };
 
   const findById = async (id: string): Promise<IUser> => {
@@ -142,8 +139,8 @@ export const makeUserDb = ({ User }: { User: UserModel }) => {
 
   return Object.freeze({
     create,
-    findByEmailOrCreate,
     getAll,
+    findOneByUsernameOrId,
     findById,
     findByEmail,
     findByToken,
