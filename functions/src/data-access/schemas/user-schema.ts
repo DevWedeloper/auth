@@ -23,7 +23,6 @@ const userSchema: Schema<IUserWithoutId> = new Schema({
   },
   password: {
     type: String,
-    minlength: 8,
     validate: {
       validator: (value: string) => {
         return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(value);
