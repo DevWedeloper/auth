@@ -54,13 +54,13 @@ export const makeGoogleOAuthHandler = ({ userDb }: { userDb: UserDb }) => {
 
     const accessToken = generateAccessToken({
       userId: user._id,
-      username: user.username || '',
+      username: user.username,
       role: user.role,
     });
 
     const refreshToken = generateRefreshToken({
       userId: user._id,
-      username: user.username || '',
+      username: user.username,
       role: user.role,
     });
 

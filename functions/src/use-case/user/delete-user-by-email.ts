@@ -15,7 +15,7 @@ export const makeDeleteUserByEmail = ({
     requiredParam(password, 'Password');
 
     const user = await userDb.findByEmail(email);
-    if (!comparePassword(password, user.password || '')) {
+    if (!comparePassword(password, user.password)) {
       throw new UnauthorizedError('Invalid password.');
     }
 

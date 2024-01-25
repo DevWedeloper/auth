@@ -23,7 +23,7 @@ export const makeUpdatePasswordByEmail = ({
     requiredParam(newPassword, 'New Password');
 
     const user = await userDb.findByEmail(email);
-    if (!comparePassword(password, user.password || '')) {
+    if (!comparePassword(password, user.password)) {
       throw new UnauthorizedError('Invalid password.');
     }
 

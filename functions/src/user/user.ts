@@ -16,28 +16,20 @@ export const makeUser = ({
   password,
   role,
   refreshToken,
-}: {
-  email: string;
-  username: string | null;
-  password?: string;
-  role: 'admin' | 'standard';
-  refreshToken: { token: string; expiresAt: Date; autoLogoutAt: Date }[];
-}): IUserWithoutId => {
+}: IUserWithoutId) => {
   requiredParam(email, 'Email');
+  requiredParam(username, 'Username');
+  requiredParam(password, 'Password');
   requiredParam(role, 'Role');
   requiredParam(refreshToken, 'Refresh Token');
 
+  validateStringType(username, 'Username');
+  validateStringType(password, 'Password');
   validateEmail(email, 'Email');
 
-  if (username) {
-    validateStringType(username, 'Username');
-    validateAlphanumericUnderscore(username, 'Username');
-  }
+  validateAlphanumericUnderscore(username, 'Username');
 
-  if (password) {
-    validateStringType(password, 'Password');
-    validatePassword(password);
-  }
+  validatePassword(password);
 
   validateRole(role);
 
