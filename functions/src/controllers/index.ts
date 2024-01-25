@@ -8,8 +8,14 @@ import { makeLogoutEndpoint } from './auth/logout';
 import { makeRefreshAccessTokenEndpoint } from './auth/refresh-access-token';
 import { makeRequestEmailVerificationCodeEndpoint } from './auth/request-email-verification-code';
 import { makeCreateUserEndpoint } from './user/create-user';
+import { makeDeleteUserByEmailEndpoint } from './user/delete-user-by-email';
+import { makeForgotPasswordEndpoint } from './user/forgot-password';
 import { makeGetAllUsersEndpoint } from './user/get-all-users';
 import { makeGetUserByIdEndpoint } from './user/get-user-by-id';
+import { makeResetPasswordEndpoint } from './user/reset-password';
+import { makeUpdateEmailByEmailEndpoint } from './user/update-email-by-email';
+import { makeUpdatePasswordByEmailEndpoint } from './user/update-password-by-email';
+import { makeUpdateUsernameByEmailEndpoint } from './user/update-username-by-email';
 
 export const createUserEndpoint = makeCreateUserEndpoint({
   createUser: UserService.createUser,
@@ -19,6 +25,24 @@ export const getAllUsersEndpoint = makeGetAllUsersEndpoint({
 });
 export const getUserByIdEndpoint = makeGetUserByIdEndpoint({
   getUserById: UserService.getUserById,
+});
+export const updateEmailByEmailEndpoint = makeUpdateEmailByEmailEndpoint({
+  updateEmailByEmail: UserService.updateEmailByEmail,
+});
+export const updatePasswordByEmailEndpoint = makeUpdatePasswordByEmailEndpoint({
+  updatePasswordByEmail: UserService.updatePasswordByEmail,
+});
+export const updateUsernameByEmailEndpoint = makeUpdateUsernameByEmailEndpoint({
+  updateUsernameByEmail: UserService.updateUsernameByEmail,
+});
+export const deleteUserByEmailEndpoint = makeDeleteUserByEmailEndpoint({
+  deleteUserByEmail: UserService.deleteUserByEmail,
+});
+export const forgotPasswordEndpoint = makeForgotPasswordEndpoint({
+  forgotPassword: UserService.forgotPassword,
+});
+export const resetPasswordEndpoint = makeResetPasswordEndpoint({
+  resetPassword: UserService.resetPassword,
 });
 
 export const getAutoLogoutAtEndpoint = makeGetAutoLogoutAtEndpoint({

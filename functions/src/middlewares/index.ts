@@ -1,6 +1,10 @@
-import { AuthService } from '../use-case';
-import { makeLoggedInUserMiddleware } from './logged-in-user';
+import { AuthService, restrictedUserActions } from '../use-case';
+import { makeIsTokenFromUserMiddleware } from './is-token-from-user';
+import { makeRestrictedUserActionsMiddleware } from './restricted-user-actions';
 
-export const loggedInUserMiddleware = makeLoggedInUserMiddleware({
-  loggedInUser: AuthService.loggedInUser,
+export const isTokenFromUserMiddleware = makeIsTokenFromUserMiddleware({
+  isTokenFromUser: AuthService.isTokenFromUser,
 });
+
+export const restrictedUserActionsMiddleware =
+  makeRestrictedUserActionsMiddleware({ restrictedUserActions });

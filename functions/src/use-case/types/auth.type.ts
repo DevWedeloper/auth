@@ -14,11 +14,10 @@ export type googleOAuthHandler = (
 
 export type isLoggedIn = (accessToken: string | undefined) => void;
 
-export type loggedInUser = (accessToken: string | undefined) => {
-  userId: string;
-  username: string;
-  role: string;
-};
+export type isTokenFromUser = (
+  accessToken: string | undefined,
+  email: string,
+) => Promise<void>;
 
 export type login = (
   username: string,
