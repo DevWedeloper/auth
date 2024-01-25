@@ -14,7 +14,7 @@ export const makeGetAutoLogoutAtEndpoint = ({
     next: NextFunction,
   ): Promise<void | Response> => {
     try {
-      const { expired } = await getAutoLogoutAt(req.body.refreshToken);
+      const { expired } = await getAutoLogoutAt(req.cookies.refreshToken);
       if (expired) {
         clearRefreshAndAccessTokenCookies(res);
         throw new UnauthorizedError('Session expired.');
