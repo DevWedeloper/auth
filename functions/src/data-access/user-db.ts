@@ -44,24 +44,6 @@ export const makeUserDb = ({ User }: { User: UserModel }) => {
     return await User.find();
   };
 
-  const findOneByUsernameOrId = async (
-    query: Partial<UserUniqueIdentifier>,
-  ): Promise<IUser> => {
-    try {
-      return (
-        (await User.findOne(query))?.toObject() || throwUserNotFoundError()
-      );
-    } catch (error) {
-      if (error instanceof NotFoundError) {
-        throw error;
-      }
-      if (error instanceof Error) {
-        handleMongooseCastObjectIdError(error);
-      }
-      throw new Error('Failed to find user by name or id.');
-    }
-  };
-
   const findById = async (id: string): Promise<IUser> => {
     try {
       return (await User.findById(id))?.toObject() || throwUserNotFoundError();

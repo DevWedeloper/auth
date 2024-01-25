@@ -22,12 +22,15 @@ export const makeGoogleOAuthHandlerEndpoint = ({
         clearRefreshAndAccessTokenCookies(res);
       }
 
-      const { accessToken, refreshToken } = await googleOAuthHandler(
+      const result = await googleOAuthHandler(
         req.cookies.refreshToken,
         req.body.credential,
       );
 
-      setRefreshAndAccessTokenCookies(res, { refreshToken, accessToken });
+      if (!('accountNotFound' in result)) {
+        const { accessToken, refreshToken } = result;
+        setRefreshAndAccessTokenCookies(res, { refreshToken, accessToken });
+      }
 
       if (req.headers.origin === redirectUri) {
         return res.sendStatus(200);

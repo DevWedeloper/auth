@@ -10,7 +10,6 @@ export type ResetPasswordTokenModel = Model<IResetPasswordToken>;
 
 export type UserDb = {
   create: (user: IUserWithoutId) => Promise<IUser>;
-  findByEmailOrCreate: (email: string) => Promise<IUser>;
   getAll: () => Promise<IUser[]>;
   findOneByUsernameOrId: (
     query: Partial<UserUniqueIdentifier>,
