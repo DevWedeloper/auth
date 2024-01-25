@@ -144,7 +144,6 @@ export const makeUserDb = ({ User }: { User: UserModel }) => {
     create,
     findByEmailOrCreate,
     getAll,
-    findOneByUsernameOrId,
     findById,
     findByEmail,
     findByToken,
