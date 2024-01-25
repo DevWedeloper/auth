@@ -66,7 +66,7 @@ export const validatePassword = (value: string) => {
   const pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
   const message =
     'Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, and one digit.';
-  if (!pattern.test(value)) {
+  if (!pattern.test(value) || value.length < 8) {
     throw new InvalidPropertyError(message);
   }
 };

@@ -5,6 +5,7 @@ import {
   validateAlphanumericUnderscore,
   validateDateType,
   validateEmail,
+  validateNumberRange,
   validatePassword,
   validateRole,
   validateStringType,
@@ -26,6 +27,8 @@ export const makeUser = ({
   validateStringType(username, 'Username');
   validateStringType(password, 'Password');
   validateEmail(email, 'Email');
+
+  validateNumberRange(username.length, 6, 20, 'Username length');
 
   validateAlphanumericUnderscore(username, 'Username');
 
