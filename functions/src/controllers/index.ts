@@ -7,6 +7,8 @@ import { makeLoginEndpoint } from './auth/login';
 import { makeLogoutEndpoint } from './auth/logout';
 import { makeRefreshAccessTokenEndpoint } from './auth/refresh-access-token';
 import { makeRequestEmailVerificationCodeEndpoint } from './auth/request-email-verification-code';
+import { makeIsEmailUniqueEndpoint } from './is-unique/is-email-unique';
+import { makeIsUsernameUniqueEndpoint } from './is-unique/is-username-unique';
 import { makeCreateUserEndpoint } from './user/create-user';
 import { makeDeleteUserByEmailEndpoint } from './user/delete-user-by-email';
 import { makeForgotPasswordEndpoint } from './user/forgot-password';
@@ -25,6 +27,12 @@ export const getAllUsersEndpoint = makeGetAllUsersEndpoint({
 });
 export const getUserByIdEndpoint = makeGetUserByIdEndpoint({
   getUserById: UserService.getUserById,
+});
+export const isEmailUniqueEndpoint = makeIsEmailUniqueEndpoint({
+  isEmailUnique: UserService.isEmailUnique,
+});
+export const isUsernameUniqueEndpoint = makeIsUsernameUniqueEndpoint({
+  isUsernameUnique: UserService.isUsernameUnique,
 });
 export const updateEmailByEmailEndpoint = makeUpdateEmailByEmailEndpoint({
   updateEmailByEmail: UserService.updateEmailByEmail,

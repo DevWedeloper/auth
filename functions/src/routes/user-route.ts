@@ -5,6 +5,8 @@ import {
   forgotPasswordEndpoint,
   getAllUsersEndpoint,
   getUserByIdEndpoint,
+  isEmailUniqueEndpoint,
+  isUsernameUniqueEndpoint,
   resetPasswordEndpoint,
   updateEmailByEmailEndpoint,
   updatePasswordByEmailEndpoint,
@@ -20,6 +22,8 @@ const router = Router();
 router.post('/', createUserEndpoint);
 router.get('/', getAllUsersEndpoint);
 router.get('/:id', getUserByIdEndpoint);
+router.get('/unique/email', isEmailUniqueEndpoint);
+router.get('/unique/username', isUsernameUniqueEndpoint);
 router.put(
   '/updateEmail',
   isTokenFromUserMiddleware,

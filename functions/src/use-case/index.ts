@@ -15,6 +15,8 @@ import { makeLogout } from './auth/logout';
 import { makeRefreshAccessToken } from './auth/refresh-access-token';
 import { makeRequestEmailVerificationCode } from './auth/request-email-verification-code';
 import { makeRestrictedUserActions } from './auth/restricted-user-actions';
+import { makeIsEmailUnique } from './is-unique/is-email-unique';
+import { makeIsUsernameUnique } from './is-unique/is-username-unique';
 import { makeCreateUser } from './user/create-user';
 import { makeDeleteUserByEmail } from './user/delete-user-by-email';
 import { makeForgotPassword } from './user/forgot-password';
@@ -28,6 +30,8 @@ import { makeUpdateUsernameByEmail } from './user/update-username-by-email';
 const createUser = makeCreateUser({ userDb, emailVerificationTokenDb, hash });
 const getAllUsers = makeGetAllUsers({ userDb });
 const getUserById = makeGetUserById({ userDb });
+const isEmailUnique = makeIsEmailUnique({ userDb });
+const isUsernameUnique = makeIsUsernameUnique({ userDb });
 const updateEmailByEmail = makeUpdateEmailByEmail({
   userDb,
   emailVerificationTokenDb,
@@ -52,6 +56,8 @@ export const UserService = Object.freeze({
   createUser,
   getAllUsers,
   getUserById,
+  isEmailUnique,
+  isUsernameUnique,
   updateEmailByEmail,
   updatePasswordByEmail,
   updateUsernameByEmail,

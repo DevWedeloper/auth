@@ -11,6 +11,14 @@ export type getAllUsers = () => Promise<IUser[]>;
 
 export type getUserById = (id: string) => Promise<IUser>;
 
+export type isEmailUnique = (
+  email: string,
+) => Promise<'Email is not unique' | 'Email is unique'>;
+
+export type isUsernameUnique = (
+  username: string,
+) => Promise<'Username is not unique' | 'Username is unique'>;
+
 export type updateEmailByEmail = (
   email: string,
   newEmail: string,
