@@ -12,7 +12,7 @@ export const makeIsUsernameUniqueEndpoint = ({
     next: NextFunction,
   ): Promise<void | Response> => {
     try {
-      const message = await isUsernameUnique(req.body.username);
+      const message = await isUsernameUnique(req.params.username);
       return res.status(200).json({ message });
     } catch (error) {
       next(error);
