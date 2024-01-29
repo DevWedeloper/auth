@@ -7,17 +7,22 @@ export type getRole = (accessToken: string) => { role: string };
 export type googleOAuthHandler = (
   oldRefreshToken: string | undefined,
   credential: string,
-) => Promise<{
-  accessToken: string;
-  refreshToken: string;
-}>;
+) => Promise<
+  | {
+      accountNotFound: boolean;
+    }
+  | {
+      accessToken: string;
+      refreshToken: string;
+    }
+>;
 
 export type isLoggedIn = (accessToken: string | undefined) => void;
 
-export type loggedInUser = (accessToken: string | undefined) => {
-  userId: string;
-  role: string;
-};
+export type isTokenFromUser = (
+  accessToken: string | undefined,
+  email: string,
+) => Promise<void>;
 
 export type login = (
   username: string,

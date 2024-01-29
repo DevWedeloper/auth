@@ -1,14 +1,15 @@
 import { Model } from 'mongoose';
 import { IEmailVerificationToken } from '../../types/email-verification-token.type';
+import { IResetPasswordToken } from '../../types/reset-password-token.type';
 import { UserUniqueIdentifier } from '../../types/unique-identifier.type';
 import { IUser, IUserWithoutId } from '../../types/user.type';
 
 export type UserModel = Model<IUserWithoutId>;
 export type EmailVerificationTokenModel = Model<IEmailVerificationToken>;
+export type ResetPasswordTokenModel = Model<IResetPasswordToken>;
 
 export type UserDb = {
   create: (user: IUserWithoutId) => Promise<IUser>;
-  findByEmailOrCreate: (email: string) => Promise<IUser>;
   getAll: () => Promise<IUser[]>;
   findOneByUsernameOrId: (
     query: Partial<UserUniqueIdentifier>,
@@ -32,4 +33,17 @@ export type EmailVerificationTokenDb = {
     query: Partial<IEmailVerificationToken>,
   ) => Promise<IEmailVerificationToken>;
   deleteByEmail: (email: string) => Promise<IEmailVerificationToken>;
+};
+
+export type ResetPasswordTokenDb = {
+  create: (
+    emailVerificationToken: IResetPasswordToken,
+  ) => Promise<IResetPasswordToken>;
+  findByToken: (token: string) => Promise<IResetPasswordToken>;
+  isEmailExisting: (email: string) => Promise<IResetPasswordToken | null>;
+  updateByEmail: (
+    email: string,
+    query: Partial<IResetPasswordToken>,
+  ) => Promise<IResetPasswordToken>;
+  deleteByEmail: (email: string) => Promise<IResetPasswordToken>;
 };

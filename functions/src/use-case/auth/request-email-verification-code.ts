@@ -1,26 +1,15 @@
-import {
-  EmailVerificationTokenDb,
-  UserDb,
-} from '../../data-access/types/data-access.type';
-import { UniqueConstraintError } from '../../utils/errors';
+import { EmailVerificationTokenDb } from '../../data-access/types/data-access.type';
 import { requiredParam } from '../../utils/validation-utils';
 import { generateVerificationCode } from '../utils/generate-verification-code';
-import { sendVerificationCode } from '../utils/send-verification-code';
+import { sendVerificationCode } from '../utils/send-verification';
 
 export const makeRequestEmailVerificationCode = ({
-  userDb,
   emailVerificationTokenDb,
 }: {
-  userDb: UserDb;
   emailVerificationTokenDb: EmailVerificationTokenDb;
 }) => {
   const requestEmailVerificationCode = async (email: string) => {
     requiredParam(email, 'Email');
-
-    const isEmailExisting = await userDb.isExisting({ email });
-    if (isEmailExisting) {
-      throw new UniqueConstraintError('A user with this email already exists.');
-    }
 
     const verificationCode = generateVerificationCode();
 

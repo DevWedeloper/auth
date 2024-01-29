@@ -25,22 +25,22 @@ export const makeLogin = ({
 
     const user = await userDb.isExisting({ username });
     if (!user) {
-      throw new UnauthorizedError('Invalid username');
+      throw new UnauthorizedError('Invalid username.');
     }
 
-    if (!comparePassword(password, user.password || '')) {
-      throw new UnauthorizedError('Invalid password');
+    if (!comparePassword(password, user.password)) {
+      throw new UnauthorizedError('Invalid password.');
     }
 
     const accessToken = generateAccessToken({
       userId: user._id,
-      username: user.username || '',
+      username: user.username,
       role: user.role,
     });
 
     const refreshToken = generateRefreshToken({
       userId: user._id,
-      username: user.username || '',
+      username: user.username,
       role: user.role,
     });
 

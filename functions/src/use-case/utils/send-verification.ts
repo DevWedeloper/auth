@@ -20,3 +20,17 @@ export const sendVerificationCode = async (
     html: `<p>${verificationCode}</p>`,
   });
 };
+
+export const sendResetPasswordTokenAndUrl = async (
+  toEmail: string,
+  token: string,
+  baseUrl: string,
+) => {
+  const resetUrl = `${baseUrl}/?token=${token}`;
+  await transport.sendMail({
+    from: process.env.SMTP_SENDER,
+    to: toEmail,
+    subject: 'Reset Your Password',
+    html: `<p>Click <a href="${resetUrl}">here</a> to reset your password.</p>`,
+  });
+};

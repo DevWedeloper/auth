@@ -19,27 +19,6 @@ export const makeUserDb = ({ User }: { User: UserModel }) => {
     }
   };
 
-  const findByEmailOrCreate = async (email: string): Promise<IUser> => {
-    try {
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
-        return existingUser.toObject();
-      }
-      const newUser: IUserWithoutId = {
-        email,
-        username: null,
-        role: 'standard',
-        refreshToken: [],
-      };
-      return (await User.create(newUser)).toObject();
-    } catch (error) {
-      if (error instanceof Error) {
-        handleMongooseUniqueConstraintError(error);
-      }
-      throw new Error('Failed to create user.');
-    }
-  };
-
   const getAll = async (): Promise<IUser[]> => {
     return await User.find();
   };
@@ -160,7 +139,6 @@ export const makeUserDb = ({ User }: { User: UserModel }) => {
 
   return Object.freeze({
     create,
-    findByEmailOrCreate,
     getAll,
     findOneByUsernameOrId,
     findById,
