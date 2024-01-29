@@ -17,6 +17,7 @@ import { makeRequestEmailVerificationCode } from './auth/request-email-verificat
 import { makeRestrictedUserActions } from './auth/restricted-user-actions';
 import { makeIsEmailUnique } from './is-unique/is-email-unique';
 import { makeIsUsernameUnique } from './is-unique/is-username-unique';
+import { makeGetResetPasswordTokenByToken } from './reset-password-token/get-reset-password-token-by-token';
 import { makeCreateUser } from './user/create-user';
 import { makeDeleteUserByEmail } from './user/delete-user-by-email';
 import { makeForgotPassword } from './user/forgot-password';
@@ -91,3 +92,7 @@ export const AuthService = Object.freeze({
 });
 
 export const restrictedUserActions = makeRestrictedUserActions({ verify });
+
+export const getResetPasswordTokenByToken = makeGetResetPasswordTokenByToken({
+  resetPasswordTokenDb,
+});
