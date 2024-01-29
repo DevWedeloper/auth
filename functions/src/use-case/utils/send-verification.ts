@@ -26,7 +26,7 @@ export const sendResetPasswordTokenAndUrl = async (
   token: string,
   baseUrl: string,
 ) => {
-  const resetUrl = `${baseUrl}/reset-password?token=${token}`;
+  const resetUrl = `${baseUrl}/?token=${token}`;
   await transport.sendMail({
     from: process.env.SMTP_SENDER,
     to: toEmail,
