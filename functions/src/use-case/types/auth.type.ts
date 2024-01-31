@@ -2,6 +2,10 @@ export type getAutoLogoutAt = (refreshToken: string) => Promise<{
   expired: boolean;
 }>;
 
+export type getEmail = (accessToken: string) => Promise<{
+  email: string;
+}>
+
 export type getRole = (accessToken: string) => { role: string };
 
 export type googleOAuthHandler = (

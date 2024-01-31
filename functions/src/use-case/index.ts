@@ -6,6 +6,7 @@ import {
   userDb,
 } from '../data-access';
 import { makeGetAutoLogoutAt } from './auth/get-auto-logout-at';
+import { makeGetEmail } from './auth/get-email';
 import { makeGetRole } from './auth/get-role';
 import { makeGoogleOAuthHandler } from './auth/google-OAuth-handler';
 import { makeIsLoggedIn } from './auth/is-logged-in';
@@ -68,6 +69,7 @@ export const UserService = Object.freeze({
 });
 
 const getAutoLogoutAt = makeGetAutoLogoutAt({ userDb });
+const getEmail = makeGetEmail({ userDb, verify });
 const getRole = makeGetRole({ verify: verify });
 const googleOAuthHandler = makeGoogleOAuthHandler({ userDb });
 const isLoggedIn = makeIsLoggedIn({ verify });
@@ -81,6 +83,7 @@ const requestEmailVerificationCode = makeRequestEmailVerificationCode({
 
 export const AuthService = Object.freeze({
   getAutoLogoutAt,
+  getEmail,
   getRole,
   googleOAuthHandler,
   isLoggedIn,

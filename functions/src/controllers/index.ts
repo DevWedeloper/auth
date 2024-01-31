@@ -4,6 +4,7 @@ import {
   getResetPasswordTokenByToken,
 } from '../use-case';
 import { makeGetAutoLogoutAtEndpoint } from './auth/get-auto-logout-at';
+import { makeGetEmailEndpoint } from './auth/get-email';
 import { makeGetRoleEndpoint } from './auth/get-role';
 import { makeGoogleOAuthHandlerEndpoint } from './auth/google-OAuth-handler';
 import { makeIsLoggedInEndpoint } from './auth/is-logged-in';
@@ -60,6 +61,9 @@ export const resetPasswordEndpoint = makeResetPasswordEndpoint({
 
 export const getAutoLogoutAtEndpoint = makeGetAutoLogoutAtEndpoint({
   getAutoLogoutAt: AuthService.getAutoLogoutAt,
+});
+export const getEmailEndpoint = makeGetEmailEndpoint({
+  getEmail: AuthService.getEmail,
 });
 export const getRoleEndpoint = makeGetRoleEndpoint({
   getRole: AuthService.getRole,
