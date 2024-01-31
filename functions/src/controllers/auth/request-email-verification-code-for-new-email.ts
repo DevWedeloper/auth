@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { requestEmailVerificationCode } from '../../use-case/types/auth.type';
 
-export const makeRequestEmailVerificationCodeEndpoint = ({
+export const makeRequestEmailVerificationCodeForNewEmailEndpoint = ({
   requestEmailVerificationCode,
 }: {
   requestEmailVerificationCode: requestEmailVerificationCode;
 }) => {
-  const requestEmailVerificationCodeEndpoint = async (
+  const requestEmailVerificationCodeForNewEmailEndpoint = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -18,5 +18,5 @@ export const makeRequestEmailVerificationCodeEndpoint = ({
       next(error);
     }
   };
-  return requestEmailVerificationCodeEndpoint;
+  return requestEmailVerificationCodeForNewEmailEndpoint;
 };

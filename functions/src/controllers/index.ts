@@ -10,7 +10,8 @@ import { makeIsLoggedInEndpoint } from './auth/is-logged-in';
 import { makeLoginEndpoint } from './auth/login';
 import { makeLogoutEndpoint } from './auth/logout';
 import { makeRefreshAccessTokenEndpoint } from './auth/refresh-access-token';
-import { makeRequestEmailVerificationCodeEndpoint } from './auth/request-email-verification-code';
+import { makeRequestEmailVerificationCodeForLoggedInUserEndpoint } from './auth/request-email-verification-code-for-logged-in-user';
+import { makeRequestEmailVerificationCodeForNewEmailEndpoint } from './auth/request-email-verification-code-for-new-email';
 import { makeCheckResetPasswordTokenExistenceMiddleware } from './is-existing/check-reset-password-token-existence';
 import { makeIsEmailUniqueEndpoint } from './is-unique/is-email-unique';
 import { makeIsUsernameUniqueEndpoint } from './is-unique/is-username-unique';
@@ -81,8 +82,13 @@ export const logoutEndpoint = makeLogoutEndpoint({
 export const refreshAccessTokenEndpoint = makeRefreshAccessTokenEndpoint({
   refreshAccessToken: AuthService.refreshAccessToken,
 });
-export const requestEmailVerificationCodeEndpoint =
-  makeRequestEmailVerificationCodeEndpoint({
+export const requestEmailVerificationCodeForLoggedInUserEndpoint =
+  makeRequestEmailVerificationCodeForLoggedInUserEndpoint({
+    requestEmailVerificationCode: AuthService.requestEmailVerificationCode,
+    getEmail: AuthService.getEmail,
+  });
+export const requestEmailVerificationCodeForNewEmailEndpoint =
+  makeRequestEmailVerificationCodeForNewEmailEndpoint({
     requestEmailVerificationCode: AuthService.requestEmailVerificationCode,
   });
 
