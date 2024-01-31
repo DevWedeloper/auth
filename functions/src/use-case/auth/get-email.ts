@@ -24,7 +24,7 @@ export const makeGetEmail = ({
     }
 
     const user = await userDb.findOneByUsernameOrId({
-      username: decodedToken.username,
+      _id: decodedToken._id,
     });
 
     return { email: user.email };
