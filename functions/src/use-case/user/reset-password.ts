@@ -27,6 +27,8 @@ export const makeResetPassword = ({
 
     const updatedUser = makeUser({ ...user, password: hashedPassword });
 
+    await resetPasswordTokenDb.deleteByEmail(retrievedToken.email);
+
     await userDb.updateById(user._id, updatedUser);
   };
   return resetPassword;

@@ -6,6 +6,7 @@ import {
   userDb,
 } from '../data-access';
 import { makeGetAutoLogoutAt } from './auth/get-auto-logout-at';
+import { makeGetEmail } from './auth/get-email';
 import { makeGetRole } from './auth/get-role';
 import { makeGoogleOAuthHandler } from './auth/google-OAuth-handler';
 import { makeIsLoggedIn } from './auth/is-logged-in';
@@ -17,6 +18,7 @@ import { makeRequestEmailVerificationCode } from './auth/request-email-verificat
 import { makeRestrictedUserActions } from './auth/restricted-user-actions';
 import { makeIsEmailUnique } from './is-unique/is-email-unique';
 import { makeIsUsernameUnique } from './is-unique/is-username-unique';
+import { makeGetResetPasswordTokenByToken } from './reset-password-token/get-reset-password-token-by-token';
 import { makeCreateUser } from './user/create-user';
 import { makeDeleteUserByEmail } from './user/delete-user-by-email';
 import { makeForgotPassword } from './user/forgot-password';
@@ -67,6 +69,7 @@ export const UserService = Object.freeze({
 });
 
 const getAutoLogoutAt = makeGetAutoLogoutAt({ userDb });
+const getEmail = makeGetEmail({ userDb, verify });
 const getRole = makeGetRole({ verify: verify });
 const googleOAuthHandler = makeGoogleOAuthHandler({ userDb });
 const isLoggedIn = makeIsLoggedIn({ verify });
@@ -80,6 +83,7 @@ const requestEmailVerificationCode = makeRequestEmailVerificationCode({
 
 export const AuthService = Object.freeze({
   getAutoLogoutAt,
+  getEmail,
   getRole,
   googleOAuthHandler,
   isLoggedIn,
@@ -91,3 +95,7 @@ export const AuthService = Object.freeze({
 });
 
 export const restrictedUserActions = makeRestrictedUserActions({ verify });
+
+export const getResetPasswordTokenByToken = makeGetResetPasswordTokenByToken({
+  resetPasswordTokenDb,
+});

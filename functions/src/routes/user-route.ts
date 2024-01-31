@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  checkResetPasswordTokenExistenceEndpoint,
   createUserEndpoint,
   deleteUserByEmailEndpoint,
   forgotPasswordEndpoint,
@@ -13,7 +14,7 @@ import {
   updateUsernameByEmailEndpoint,
 } from '../controllers';
 import {
-  isTokenFromUserMiddleware,
+  isLoggedInMiddleware,
   restrictedUserActionsMiddleware,
 } from '../middlewares';
 
@@ -21,34 +22,38 @@ const router = Router();
 
 router.post('/', createUserEndpoint);
 router.get('/', getAllUsersEndpoint);
-router.get('/:id', getUserByIdEndpoint);
 router.get('/unique/email/:email', isEmailUniqueEndpoint);
 router.get('/unique/username/:username', isUsernameUniqueEndpoint);
 router.put(
   '/updateEmail',
-  isTokenFromUserMiddleware,
+  isLoggedInMiddleware,
   restrictedUserActionsMiddleware,
   updateEmailByEmailEndpoint,
 );
 router.put(
   '/updatePassword',
-  isTokenFromUserMiddleware,
+  isLoggedInMiddleware,
   restrictedUserActionsMiddleware,
   updatePasswordByEmailEndpoint,
 );
 router.put(
   '/updateUsername',
-  isTokenFromUserMiddleware,
+  isLoggedInMiddleware,
   restrictedUserActionsMiddleware,
   updateUsernameByEmailEndpoint,
 );
 router.delete(
   '/deleteUser',
-  isTokenFromUserMiddleware,
+  isLoggedInMiddleware,
   restrictedUserActionsMiddleware,
   deleteUserByEmailEndpoint,
 );
 router.post('/forgotPassword', forgotPasswordEndpoint);
 router.post('/resetPassword', resetPasswordEndpoint);
+router.get(
+  '/checkResetPasswordToken/:token',
+  checkResetPasswordTokenExistenceEndpoint,
+);
+router.get('/:id', getUserByIdEndpoint);
 
 export default router;

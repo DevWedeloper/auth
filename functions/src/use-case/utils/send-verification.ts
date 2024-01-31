@@ -31,6 +31,6 @@ export const sendResetPasswordTokenAndUrl = async (
     from: process.env.SMTP_SENDER,
     to: toEmail,
     subject: 'Reset Your Password',
-    html: `<p>Click <a href="${resetUrl}">here</a> to reset your password.</p>`,
+    html: `<p>Click <a href="${resetUrl}">here</a> to reset your password. This link will expire in 5 minutes.</p>`,
   });
 };
