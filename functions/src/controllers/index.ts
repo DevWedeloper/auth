@@ -4,7 +4,6 @@ import {
   getResetPasswordTokenByToken,
 } from '../use-case';
 import { makeGetAutoLogoutAtEndpoint } from './auth/get-auto-logout-at';
-import { makeGetEmailEndpoint } from './auth/get-email';
 import { makeGetRoleEndpoint } from './auth/get-role';
 import { makeGoogleOAuthHandlerEndpoint } from './auth/google-OAuth-handler';
 import { makeIsLoggedInEndpoint } from './auth/is-logged-in';
@@ -42,15 +41,19 @@ export const isUsernameUniqueEndpoint = makeIsUsernameUniqueEndpoint({
 });
 export const updateEmailByEmailEndpoint = makeUpdateEmailByEmailEndpoint({
   updateEmailByEmail: UserService.updateEmailByEmail,
+  getEmail: AuthService.getEmail,
 });
 export const updatePasswordByEmailEndpoint = makeUpdatePasswordByEmailEndpoint({
   updatePasswordByEmail: UserService.updatePasswordByEmail,
+  getEmail: AuthService.getEmail,
 });
 export const updateUsernameByEmailEndpoint = makeUpdateUsernameByEmailEndpoint({
   updateUsernameByEmail: UserService.updateUsernameByEmail,
+  getEmail: AuthService.getEmail,
 });
 export const deleteUserByEmailEndpoint = makeDeleteUserByEmailEndpoint({
   deleteUserByEmail: UserService.deleteUserByEmail,
+  getEmail: AuthService.getEmail,
 });
 export const forgotPasswordEndpoint = makeForgotPasswordEndpoint({
   forgotPassword: UserService.forgotPassword,
@@ -61,9 +64,6 @@ export const resetPasswordEndpoint = makeResetPasswordEndpoint({
 
 export const getAutoLogoutAtEndpoint = makeGetAutoLogoutAtEndpoint({
   getAutoLogoutAt: AuthService.getAutoLogoutAt,
-});
-export const getEmailEndpoint = makeGetEmailEndpoint({
-  getEmail: AuthService.getEmail,
 });
 export const getRoleEndpoint = makeGetRoleEndpoint({
   getRole: AuthService.getRole,
