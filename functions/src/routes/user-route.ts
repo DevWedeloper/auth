@@ -14,6 +14,7 @@ import {
   updateUsernameByEmailEndpoint,
 } from '../controllers';
 import {
+  isLoggedInMiddleware,
   restrictedUserActionsMiddleware,
 } from '../middlewares';
 
@@ -25,21 +26,25 @@ router.get('/unique/email/:email', isEmailUniqueEndpoint);
 router.get('/unique/username/:username', isUsernameUniqueEndpoint);
 router.put(
   '/updateEmail',
+  isLoggedInMiddleware,
   restrictedUserActionsMiddleware,
   updateEmailByEmailEndpoint,
 );
 router.put(
   '/updatePassword',
+  isLoggedInMiddleware,
   restrictedUserActionsMiddleware,
   updatePasswordByEmailEndpoint,
 );
 router.put(
   '/updateUsername',
+  isLoggedInMiddleware,
   restrictedUserActionsMiddleware,
   updateUsernameByEmailEndpoint,
 );
 router.delete(
   '/deleteUser',
+  isLoggedInMiddleware,
   restrictedUserActionsMiddleware,
   deleteUserByEmailEndpoint,
 );
