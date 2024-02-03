@@ -81,7 +81,7 @@ export const makeRefreshAccessToken = ({
       ],
     });
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken: newRefreshToken };
   };
   return refreshAccessToken;
 };
