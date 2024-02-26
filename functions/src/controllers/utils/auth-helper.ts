@@ -10,15 +10,20 @@ export const setRefreshAndAccessTokenCookies = (
   tokens: TokenObject,
 ): void => {
   const { accessToken, refreshToken } = tokens;
+  const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+  const expirationDate = new Date(Date.now() + oneDayInMilliseconds);
+
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
+    expires: expirationDate,
   });
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
+    expires: expirationDate,
   });
 };
 
