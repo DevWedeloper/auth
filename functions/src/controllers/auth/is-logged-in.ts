@@ -12,8 +12,12 @@ export const makeIsLoggedInEndpoint = ({
     next: NextFunction,
   ): Promise<void | Response> => {
     try {
-      isLoggedIn(req.cookies.accessToken);
-      return res.status(200).send();
+      try {
+        isLoggedIn(req.cookies.accessToken);
+        return res.status(200).json({ message: 'Logged in.' });
+      } catch (error) {
+        return res.status(200).json({ message: 'Not logged in.' });
+      }
     } catch (error) {
       next(error);
     }
